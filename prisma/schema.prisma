@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model books {
+  id         Int       @id @default(autoincrement())
+  title      String    @db.VarChar(255)
+  author     String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  quotes     quotes[]
+}
+
+model quotes {
+  id         Int       @id @default(autoincrement())
+  text       String
+  created_at DateTime? @default(now())
+
+  book_id Int
+
+  book books @relation(fields: [book_id], references: [id])
+
+  reflections reflections[]
+  mood_tags mood_tags[]
+  attachments attachments[]
+  doodles doodles[]
+}
+
+model reflections {
+  id       Int  @id @default(autoincrement())
+  content  String 
+  created_at DateTime? @default(now())
+
+  quote_id Int
+
+quote quotes @relation(fields: [quote_id], references: [id])
+}
+
+model mood_tags{
+ id     Int @id @default(autoincrement())
+ name   String
+ created_at DateTime? @default(now())
+ quotes quotes[]
+}
+
+model attachments{
+  id            Int @id @default(autoincrement())
+  file_name     String
+  file_url      String
+  created_at DateTime? @default(now())
+
+  quote_id Int
+
+  quote  quotes @relation(fields: [quote_id], references: [id])
+}
+
+model doodles {
+  id         Int       @id @default(autoincrement())
+  data       String
+  created_at DateTime? @default(now())
+  quote_id   Int
+  
+  quote  quotes @relation(fields: [quote_id], references: [id])
+}
