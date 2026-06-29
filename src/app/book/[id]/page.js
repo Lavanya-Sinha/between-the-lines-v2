@@ -48,6 +48,7 @@ const BookPage = async ({ params }) => {
         </div>
       ))}
       <Link href={`/book/${book.id}/add-quotes`}>Add Quote</Link>
+      <Link href={`/book/${id}/edit`}>Edit Book</Link>
     </main>
   );
 };
