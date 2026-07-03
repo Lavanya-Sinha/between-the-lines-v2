@@ -1,7 +1,9 @@
+import requireUser from "@/lib/auth/requireUser";
 import prisma from "@/lib/prisma";
 import UpdateQuote from "@/app/actions/UpdateQuote";
 
 const EditQuotePage = async ({ params }) => {
+  const user = requireUser()
     const{quoteId, id} = await params
     const quote = await prisma.quotes.findUnique({
         where:{

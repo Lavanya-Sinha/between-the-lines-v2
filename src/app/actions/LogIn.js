@@ -44,6 +44,6 @@ const LogIn = async (FormData) => {
     secure : process.env.NODE_ENV === "production",
     sameSite : "lax"
   })
-  redirect('/')
+  redirect('/dashboard')
 };
 export default LogIn;

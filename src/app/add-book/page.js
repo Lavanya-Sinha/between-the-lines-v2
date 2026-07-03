@@ -1,6 +1,8 @@
+import requireUser from "@/lib/auth/requireUser"
 import CreateBook from "../actions/Create"
 
-const AddBookPage = ()=>{
+const AddBookPage = async()=>{
+   const user = await requireUser()
     return(
      <main>
         <h1>ADD A BOOK</h1>
@@ -15,6 +17,7 @@ const AddBookPage = ()=>{
          </div>
          <button type="submit">Add This Book</button>
         </form>
+   
      </main>
     )
 }

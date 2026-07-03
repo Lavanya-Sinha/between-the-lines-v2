@@ -1,8 +1,10 @@
+import requireUser from "@/lib/auth/requireUser";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import DeleteBook from "@/app/actions/Delete";
 
 const BookPage = async ({ params }) => {
+  const user = await requireUser()
   const { id } = await params;
   const book = await prisma.books.findUnique({
     where: {
@@ -23,7 +25,7 @@ const BookPage = async ({ params }) => {
   }
   return (
     <main>
-      <Link href="/">← Back to Books</Link>
+      <Link href="/dashboard">← Back to Books</Link>
       <h1>{book.title}</h1>
       <p>
         <strong>Author:</strong> {book.author}

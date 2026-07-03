@@ -1,8 +1,10 @@
+import requireUser from "@/lib/auth/requireUser";
 import prisma from "@/lib/prisma";
 import DeleteReflection from "@/app/actions/DeleteReflection";
 import Link from "next/link";
 
 const ReflectionPage = async ({ params }) => {
+  const user = requireUser()
   const { id, quoteId, reflectionId } = await params;
   const reflection = await prisma.reflections.findUnique({
     where: {
@@ -25,6 +27,10 @@ const ReflectionPage = async ({ params }) => {
       >
         Edit Reflection
       </Link>
+      <br />
+      <Link href={`/book/${id}/quote/${quoteId}`}>
+    ← Back to Quote
+</Link>
     </main>
   );
 };

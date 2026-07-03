@@ -1,10 +1,14 @@
 "use server";
-
+import requireUser from "@/lib/auth/requireUser";
+import requireOwnership from "@/lib/auth/requireOwnership";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 const DeleteBook = async (formData) => {
+  const user = await requireUser()
   const bookId = formData.get("id");
+  
+  await requireOwnership("books", bookId)
   const quotes = await prisma.quotes.findMany({
     where: {
       book_id: Number.parseInt(bookId),
@@ -32,6 +36,6 @@ const DeleteBook = async (formData) => {
   console.log("BOOK DELETED");
   console.log("ABOUT TO REDIRECT");
 
-  redirect("/");
+  redirect("/dashboard");
 };
 export default DeleteBook;

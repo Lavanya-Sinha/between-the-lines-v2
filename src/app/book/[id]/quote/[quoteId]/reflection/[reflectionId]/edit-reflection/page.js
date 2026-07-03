@@ -1,7 +1,9 @@
+import requireUser from "@/lib/auth/requireUser"
 import prisma from "@/lib/prisma"
 import UpdateReflection from "@/app/actions/UpdateReflection"
 
 const EditReflectionPage = async({params})=>{
+    const user = await requireUser()
     const{reflectionId, quoteId, id} = await params
     const reflection = await prisma.reflections.findUnique({
         where : {

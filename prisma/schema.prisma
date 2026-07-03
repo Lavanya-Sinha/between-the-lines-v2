@@ -51,7 +51,7 @@ model quotes {
   reflections reflections[]
   mood_tags mood_tags[]
   attachments attachments[]
-  doodles doodles[]
+  doodle doodles?
 }
 
 model reflections {
@@ -83,10 +83,10 @@ model attachments{
 }
 
 model doodles {
-  id         Int       @id @default(autoincrement())
-  data       String
+  id                Int       @id @default(autoincrement())
+  canvas_data       Json
   created_at DateTime? @default(now())
-  quote_id   Int
+  quote_id   Int    @unique
   
   quote  quotes @relation(fields: [quote_id], references: [id])
 }

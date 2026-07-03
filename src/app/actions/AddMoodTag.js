@@ -1,5 +1,5 @@
 "use server";
-
+import requireOwnership from "@/lib/auth/requireOwnership";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
@@ -9,7 +9,7 @@ const AddMoodTag = async (formData) => {
     formData.get("quote_id")
   );
   const id = formData.get("book_id")
-
+await requireOwnership("quotes", quoteId);
   const existingTag = await prisma.mood_tags.findFirst({
     where: {
         name : tagName

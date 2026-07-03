@@ -1,7 +1,10 @@
 "use server";
+import requireUser from "@/lib/auth/requireUser";
 import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 const CreateBook = async(formData)=>{
+    const user = await requireUser()
     const title = formData.get("title")
     const author = formData.get("author")
     
@@ -11,8 +14,15 @@ const CreateBook = async(formData)=>{
     await prisma.books.create({
         data: {
             title,
-            author
+            author,
+            user:{
+                connect:{
+                    id : user.id
+                }
+            }
         }
+       
     })
+    redirect("/dashboard")
 }
 export default CreateBook
