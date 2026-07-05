@@ -4,7 +4,7 @@ import Link from "next/link";
 import DeleteBook from "@/app/actions/Delete";
 
 const BookPage = async ({ params }) => {
-  const user = await requireUser()
+  const user = await requireUser();
   const { id } = await params;
   const book = await prisma.books.findUnique({
     where: {
@@ -25,32 +25,50 @@ const BookPage = async ({ params }) => {
   }
   return (
     <main>
-      <Link href="/dashboard">← Back to Books</Link>
+      <Link href="/dashboard">← Back to Bookshelf</Link>
+
       <h1>{book.title}</h1>
+
       <p>
         <strong>Author:</strong> {book.author}
       </p>
+
       <p>
         <strong>Added:</strong> {book.created_at?.toLocaleDateString()}
       </p>
+
+      <Link href={`/book/${id}/edit`}>Edit Book</Link>
+
       <form action={DeleteBook}>
         <input type="hidden" name="id" value={book.id} />
-
         <button type="submit">Delete Book</button>
       </form>
-      <p>
-        <strong>Added:</strong>
-        {book.created_at?.toLocaleDateString()}
-      </p>
-      <h2>Quotes</h2>
 
-      {book.quotes.map((quote) => (
-        <div key={quote.id}>
-          <Link href={`/book/${book.id}/quote/${quote.id}`}>{quote.text}</Link>
+      <h2>Quotes ({book.quotes.length})</h2>
+      <br />
+
+          <Link href={`/book/${book.id}/add-quotes`}>Add Another Quote</Link>
+          <br />
+
+      {book.quotes.length === 0 ? (
+        <div>
+          <p>No quotes yet.</p>
+          <p>Start capturing memorable passages from this book.</p>
+
+          <Link href={`/book/${book.id}/add-quotes`}>Add Your First Quote</Link>
         </div>
-      ))}
-      <Link href={`/book/${book.id}/add-quotes`}>Add Quote</Link>
-      <Link href={`/book/${id}/edit`}>Edit Book</Link>
+      ) : (
+        <>
+          {book.quotes.map((quote) => (
+            <div key={quote.id}>
+              <Link href={`/book/${book.id}/quote/${quote.id}`}>
+                {quote.text}
+              </Link>
+            </div>
+          ))}
+
+        </>
+      )}
     </main>
   );
 };

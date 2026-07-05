@@ -13,7 +13,7 @@ model sessions {
   session_id  String   @unique
 
   user_id     Int
-  user        users    @relation(fields: [user_id], references: [id])
+  user        users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   created_at  DateTime @default(now())
   expires_at  DateTime
@@ -35,7 +35,7 @@ model books {
   author     String    @db.VarChar(255)
   created_at DateTime? @default(now()) @db.Timestamp(6)
   user_id    Int
-  user       users @relation(fields: [user_id], references: [id])
+  user       users @relation(fields: [user_id], references: [id], onDelete: Cascade)
   quotes     quotes[]
 }
 
@@ -46,7 +46,7 @@ model quotes {
 
   book_id Int
 
-  book books @relation(fields: [book_id], references: [id])
+  book books @relation(fields: [book_id], references: [id], onDelete: Cascade)
 
   reflections reflections[]
   mood_tags mood_tags[]
@@ -61,7 +61,7 @@ model reflections {
 
   quote_id Int
 
-quote quotes @relation(fields: [quote_id], references: [id])
+quote quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
 }
 
 model mood_tags{
@@ -75,11 +75,12 @@ model attachments{
   id            Int @id @default(autoincrement())
   file_name     String
   file_url      String
+   mime_type    String
   created_at DateTime? @default(now())
 
   quote_id Int
 
-  quote  quotes @relation(fields: [quote_id], references: [id])
+  quote  quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
 }
 
 model doodles {
@@ -88,5 +89,5 @@ model doodles {
   created_at DateTime? @default(now())
   quote_id   Int    @unique
   
-  quote  quotes @relation(fields: [quote_id], references: [id])
+  quote  quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
 }
