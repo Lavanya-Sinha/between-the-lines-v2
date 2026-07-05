@@ -8,7 +8,6 @@ import requireOwnership from '@/lib/auth/requireOwnership';
 const CreateAttachment = async(formData)=>{
  const quoteId = formData.get("quoteId");
 const file = formData.get("file");
-const id = formData.get("id")
 
 await requireOwnership("quotes", quoteId)
 

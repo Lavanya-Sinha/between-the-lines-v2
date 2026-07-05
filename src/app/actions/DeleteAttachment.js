@@ -6,8 +6,6 @@ import fs from "fs/promises";
 import path from "path";
 
 const DeleteAttachment = async (formData) => {
-  const id = formData.get("id");
-  const quoteId = formData.get("quoteId");
   const attachmentId = formData.get("attachmentId");
 
   await requireOwnership("attachments", attachmentId);
