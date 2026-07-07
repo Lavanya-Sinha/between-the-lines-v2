@@ -2,11 +2,22 @@
 import requireOwnership from "@/lib/auth/requireOwnership";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { BookValidation } from "@/lib/validation/BookValidation";
 
 const UpdateBook = async(FormData)=>{
-    const title = FormData.get("title")
-    const author = FormData.get("author")
+    const originalTitle = FormData.get("title")
+    const originalAuthor = FormData.get("author")
     const bookId = FormData.get("book_id")
+
+    const validation = BookValidation({
+        title : originalTitle,
+        author : originalAuthor
+    })
+    if(!validation.success){
+        throw new Error(validation.error)
+    }
+    const{title, author} = validation.data
+
     await requireOwnership("books", bookId)
     await prisma.books.update({
         where : {

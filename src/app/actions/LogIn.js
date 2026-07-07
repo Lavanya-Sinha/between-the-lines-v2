@@ -5,15 +5,24 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { LoginValidation } from "@/lib/validation/LoginValidation";
 
 const LogIn = async (FormData) => {
-  const email = FormData.get("email");
-  const password = FormData.get("password");
+  const rawEmail = FormData.get("email");
+  const rawPassword = FormData.get("password");
+
+  const validation = LoginValidation({email: rawEmail, password: rawPassword})
+  if(!validation.success){
+   throw new Error(validation.error)
+  }
+  const {email, password} = validation.data
+
   const user = await prisma.users.findUnique({
     where: {
       email,
     },
   });
+
   if (!user) {
     throw new Error("Invalid email or password.");
   }
