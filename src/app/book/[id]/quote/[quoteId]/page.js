@@ -6,25 +6,55 @@ import DeleteQuote from "@/app/actions/DeleteQuote";
 import RemoveMoodTag from "@/app/actions/RemoveMoodTag";
 import DoodlePreview from "@/app/components/DoodlePreview";
 import AttachmentsClient from "./attachments/AttachmentsClient";
-import DeleteAttachment from "@/app/actions/DeleteAttachment";
+import { AttachmentRenderer } from "@/app/components/AttachmentRenderer";
+import Search from "@/app/components/Search";
 
-const QuotePage = async ({ params }) => {
+const QuotePage = async ({ params, searchParams }) => {
   await requireUser();
+
+  const searchContent = await searchParams;
+  const searchReflection = searchContent.search ?? "";
+
+  const include = {
+    reflections: {
+      where: {
+        content: {
+          contains: searchReflection,
+          mode: "insensitive",
+        },
+      },
+    },
+    mood_tags: true,
+    doodle: true,
+    attachments: true,
+  };
+
   const { id, quoteId } = await params;
   const quote = await prisma.quotes.findUnique({
     where: {
       id: Number.parseInt(quoteId),
     },
-    include: {
-      reflections: true,
-      mood_tags: true,
-      doodle: true,
-      attachments: true,
-    },
+    include,
   });
+
+  if (!quote) {
+  return (
+    <main>
+      <h1>Quote not found.</h1>
+      <Link href={`/book/${id}`}>Back</Link>
+    </main>
+  );
+}
   return (
     <main>
       <Link href={`/book/${id}`}>← Back to Book</Link>
+
+      <Search
+        action={`/book/${id}/quote/${quoteId}`}
+        placeholder="Search Your Reflections..."
+        queryName="search"
+        defaultValue={searchReflection}
+      />
 
       <blockquote>{quote.text}</blockquote>
 
@@ -100,25 +130,12 @@ const QuotePage = async ({ params }) => {
         </>
       ) : (
         quote.attachments.map((attachment) => (
-          <div key={attachment.id}>
-            <a
-              href={attachment.file_url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {attachment.file_name}
-            </a>
-
-            <form action={DeleteAttachment}>
-              <input type="hidden" name="attachmentId" value={attachment.id} />
-
-              <input type="hidden" name="quoteId" value={quote.id} />
-
-              <input type="hidden" name="id" value={id} />
-
-              <button>Delete</button>
-            </form>
-          </div>
+          <AttachmentRenderer
+            key={attachment.id}
+            attachment={attachment}
+            quoteId={quote.id}
+            id={id}
+          />
         ))
       )}
 

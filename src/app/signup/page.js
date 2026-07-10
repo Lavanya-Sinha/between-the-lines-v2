@@ -1,4 +1,5 @@
 import SignUp from "../actions/SignUp"
+import PasswordInput from "../components/PasswordInput"
 const SignUpUser = ()=>{
     return(
 <main>
@@ -11,10 +12,10 @@ const SignUpUser = ()=>{
         <input type="email" name="email" placeholder="Enter Email..." required/>
         <br />
         <label>Password: </label>
-        <input type="password" name="password" placeholder="Create Password" required/>
+        <PasswordInput name="password" placeholder="Create Password" />
         <br />
         <label>Confirm Password: </label>
-        <input type="password" name="confirm_password" placeholder="Confirm Password" required/>
+       <PasswordInput name="confirm_password" placeholder="Confirm Password" />
         <button type="submit">Create Account</button>
     </form>
 </main>

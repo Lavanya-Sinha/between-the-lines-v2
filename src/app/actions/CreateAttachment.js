@@ -1,9 +1,8 @@
 "use server"
 
-import fs from 'fs/promises'
-import path from 'path';
 import prisma from '@/lib/prisma';
 import requireOwnership from '@/lib/auth/requireOwnership';
+import SaveFile from '@/lib/uploads/SaveFile';
 
 const CreateAttachment = async(formData)=>{
  const quoteId = formData.get("quoteId");
@@ -11,25 +10,18 @@ const file = formData.get("file");
 
 await requireOwnership("quotes", quoteId)
 
-const uniqueFileName = `${Date.now()}-${file.name}`;
-const uploadPath = path.join(process.cwd(),"public", "uploads", uniqueFileName)
 
-console.log(quoteId);
-console.log(file);
 
-const bytes = await file.arrayBuffer()
-const buffer = Buffer.from(bytes)
-console.log(buffer);
-
-await fs.writeFile(uploadPath, buffer)
+const saveFile = await SaveFile(file,"attachments")
 
 console.log("file saved");
 
 await prisma.attachments.create({
     data:{
-        file_name: file.name,
-        file_url: `/uploads/${uniqueFileName}`,
-        mime_type: file.type,
+        file_name: saveFile.fileName,
+        file_url: saveFile.fileUrl,
+        mime_type: saveFile.mimeType,
+        public_id : saveFile.publicId,
         quote_id: Number.parseInt(quoteId)
     }
 })

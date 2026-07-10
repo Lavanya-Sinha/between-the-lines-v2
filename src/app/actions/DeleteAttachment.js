@@ -1,9 +1,9 @@
 "use server";
 
 import requireOwnership from "@/lib/auth/requireOwnership";
+import { getResourceType } from "@/lib/cloudinary/getResourceType";
 import prisma from "@/lib/prisma";
-import fs from "fs/promises";
-import path from "path";
+import DeleteFile from "@/lib/uploads/DeleteFile";
 
 const DeleteAttachment = async (formData) => {
   const attachmentId = formData.get("attachmentId");
@@ -16,9 +16,11 @@ const DeleteAttachment = async (formData) => {
     },
   });
 
-  const uploadPath = path.join(process.cwd(), "/public", attachment.file_url.slice(1))
+  if (!attachment) {
+  throw new Error("Attachment not found.");
+}
 
-  await fs.unlink(uploadPath)
+  await DeleteFile(attachment.public_id, getResourceType(attachment.mime_type))
 
   await prisma.attachments.delete({
     where: {
