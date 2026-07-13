@@ -1,12 +1,16 @@
 "use server";
+
+import requireWriteAccess from "@/lib/auth/requireWriteAccess";
 import requireOwnership from "@/lib/auth/requireOwnership";
 import prisma from "@/lib/prisma";
+import { invalidateDashboard, invalidateBook } from "@/lib/cache/Invalidate";
 import { redirect } from "next/navigation";
 import { BookValidation } from "@/lib/validation/BookValidation";
 import SaveFile from "@/lib/uploads/SaveFile";
-import DeleteFile from "@/lib/uploads/DeleteFile";
+
 
 const UpdateBook = async (FormData) => {
+  await requireWriteAccess()
   const originalTitle = FormData.get("title");
   const originalAuthor = FormData.get("author");
   const originalGenres = FormData.get("genres");
@@ -57,11 +61,9 @@ const UpdateBook = async (FormData) => {
     data: updateData,
   });
 
-  console.log("Old Public ID:", currentBook.cover_public_id);
-console.log("New Public ID:", updatedCoverImage.publicId);
-  if(updatedCoverImage !== null){
-   await DeleteFile(currentBook.cover_public_id, "image")
-  }
+  //redis for cache invalidation
+  await invalidateDashboard(currentBook.user_id);
+  await invalidateBook(bookId);
   
   redirect(`/book/${bookId}`);
 };

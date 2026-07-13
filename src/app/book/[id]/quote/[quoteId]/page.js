@@ -1,5 +1,4 @@
-import requireUser from "@/lib/auth/requireUser";
-import prisma from "@/lib/prisma";
+import requireSearchAccess from "@/lib/auth/requireSearchAccess";
 import AddMoodTag from "@/app/actions/AddMoodTag";
 import Link from "next/link";
 import DeleteQuote from "@/app/actions/DeleteQuote";
@@ -8,9 +7,10 @@ import DoodlePreview from "@/app/components/DoodlePreview";
 import AttachmentsClient from "./attachments/AttachmentsClient";
 import { AttachmentRenderer } from "@/app/components/AttachmentRenderer";
 import Search from "@/app/components/Search";
+import getQuote from "@/lib/quotes/getQuote";
 
 const QuotePage = async ({ params, searchParams }) => {
-  await requireUser();
+  await requireSearchAccess();
 
   const searchContent = await searchParams;
   const searchReflection = searchContent.search ?? "";
@@ -30,12 +30,7 @@ const QuotePage = async ({ params, searchParams }) => {
   };
 
   const { id, quoteId } = await params;
-  const quote = await prisma.quotes.findUnique({
-    where: {
-      id: Number.parseInt(quoteId),
-    },
-    include,
-  });
+  const quote = await getQuote({quoteId, searchReflection, include})
 
   if (!quote) {
   return (
@@ -163,7 +158,7 @@ const QuotePage = async ({ params, searchParams }) => {
               <p>{reflection.content}</p>
             </Link>
 
-            <p>Created At: {reflection.created_at.toDateString()}</p>
+            <p>Created At: {new Date(reflection.created_at).toDateString()}</p>
 
             <br />
           </div>

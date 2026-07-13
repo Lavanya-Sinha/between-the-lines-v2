@@ -1,8 +1,10 @@
 "use server"
+import requireWriteAccess from "@/lib/auth/requireWriteAccess"
 import requireOwnership from "@/lib/auth/requireOwnership"
 import prisma from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import { QuoteValidation } from "@/lib/validation/QuoteValidation"
+import { invalidateBook, invalidateQuote } from "@/lib/cache/Invalidate"
 
 const UpdateQuote = async(FormData)=>{
 const originalText = FormData.get("text")
@@ -15,6 +17,8 @@ if(!validation.success){
 }
 const{text} = validation.data
 
+await requireWriteAccess()
+
 await requireOwnership("quotes",quoteId)
 await prisma.quotes.update({
     where:{
@@ -24,6 +28,8 @@ await prisma.quotes.update({
         text
     }
 })
+await invalidateBook(bookId);
+await invalidateQuote(quoteId);
 redirect(`/book/${bookId}/quote/${quoteId}`)
 }
 export default UpdateQuote

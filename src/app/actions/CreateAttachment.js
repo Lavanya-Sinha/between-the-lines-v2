@@ -1,12 +1,16 @@
 "use server"
 
 import prisma from '@/lib/prisma';
+import requireWriteAccess from '@/lib/auth/requireWriteAccess';
 import requireOwnership from '@/lib/auth/requireOwnership';
 import SaveFile from '@/lib/uploads/SaveFile';
+import { invalidateQuote } from '@/lib/cache/Invalidate';
 
 const CreateAttachment = async(formData)=>{
  const quoteId = formData.get("quoteId");
 const file = formData.get("file");
+
+await requireWriteAccess()
 
 await requireOwnership("quotes", quoteId)
 
@@ -25,6 +29,7 @@ await prisma.attachments.create({
         quote_id: Number.parseInt(quoteId)
     }
 })
-
+//redis cache invalidation
+await invalidateQuote(quoteId)
 }
 export default CreateAttachment

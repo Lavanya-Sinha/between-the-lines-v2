@@ -7,40 +7,27 @@ datasource db {
   provider = "postgresql"
 }
 
-model sessions {
-  id          Int      @id @default(autoincrement())
-
-  session_id  String   @unique
-
-  user_id     Int
-  user        users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  created_at  DateTime @default(now())
-  expires_at  DateTime
-}
-
-model users{
-  id             Int  @id @default(autoincrement())
-  display_name   String
-  email          String  @unique
-  password_hash  String
-  created_at     DateTime? @default(now())
-  sessions sessions[]
-  books books[]
+model users {
+  id            Int       @id @default(autoincrement())
+  display_name  String
+  email         String    @unique
+  password_hash String
+  created_at    DateTime? @default(now())
+  books         books[]
 }
 
 model books {
-  id         Int       @id @default(autoincrement())
-  title      String    @db.VarChar(255)
-  author     String    @db.VarChar(255)
-  genres      String[]
-  cover_img  String?
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(255)
+  author          String    @db.VarChar(255)
+  genres          String[]
+  cover_img       String?
   cover_public_id String?
-  updated_at DateTime? @updatedAt
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  user_id    Int
-  user       users @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  quotes     quotes[]
+  updated_at      DateTime? @updatedAt
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+  user_id         Int
+  user            users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  quotes          quotes[]
 }
 
 model quotes {
@@ -53,46 +40,46 @@ model quotes {
   book books @relation(fields: [book_id], references: [id], onDelete: Cascade)
 
   reflections reflections[]
-  mood_tags mood_tags[]
+  mood_tags   mood_tags[]
   attachments attachments[]
-  doodle doodles?
+  doodle      doodles?
 }
 
 model reflections {
-  id       Int  @id @default(autoincrement())
-  content  String 
+  id         Int       @id @default(autoincrement())
+  content    String
   created_at DateTime? @default(now())
 
   quote_id Int
 
-quote quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
+  quote quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
 }
 
-model mood_tags{
- id     Int @id @default(autoincrement())
- name   String
- created_at DateTime? @default(now())
- quotes quotes[]
+model mood_tags {
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime? @default(now())
+  quotes     quotes[]
 }
 
-model attachments{
-  id            Int @id @default(autoincrement())
-  file_name     String
-  file_url      String
-   mime_type    String
-   public_id    String?
+model attachments {
+  id         Int       @id @default(autoincrement())
+  file_name  String
+  file_url   String
+  mime_type  String
+  public_id  String?
   created_at DateTime? @default(now())
 
   quote_id Int
 
-  quote  quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
+  quote quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
 }
 
 model doodles {
-  id                Int       @id @default(autoincrement())
-  canvas_data       Json
-  created_at DateTime? @default(now())
-  quote_id   Int    @unique
-  
-  quote  quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
+  id          Int       @id @default(autoincrement())
+  canvas_data Json
+  created_at  DateTime? @default(now())
+  quote_id    Int       @unique
+
+  quote quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
 }

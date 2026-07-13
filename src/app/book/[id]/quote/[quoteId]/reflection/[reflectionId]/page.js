@@ -1,23 +1,12 @@
 import requireUser from "@/lib/auth/requireUser";
-import prisma from "@/lib/prisma";
 import DeleteReflection from "@/app/actions/DeleteReflection";
 import Link from "next/link";
+import getReflection from "@/lib/reflections/getReflection";
 
 const ReflectionPage = async ({ params }) => {
   await requireUser();
   const { id, quoteId, reflectionId } = await params;
-  const reflection = await prisma.reflections.findUnique({
-    where: {
-      id: Number.parseInt(reflectionId),
-    },
-    include: {
-      quote: {
-        include: {
-          book: true,
-        },
-      },
-    },
-  });
+  const reflection = await getReflection(reflectionId)
 
   return (
     <main>
@@ -36,7 +25,7 @@ const ReflectionPage = async ({ params }) => {
       <p>{reflection.content}</p>
 
       <p>
-        <strong>Written on:</strong> {reflection.created_at.toDateString()}
+        <strong>Written on:</strong> {new Date(reflection.created_at).toDateString()}
       </p>
 
       <br />

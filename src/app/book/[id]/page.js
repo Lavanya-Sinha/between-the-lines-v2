@@ -1,33 +1,28 @@
-import requireUser from "@/lib/auth/requireUser";
-import prisma from "@/lib/prisma";
+import requireSearchAccess from "@/lib/auth/requireSearchAccess";
+import getBook from "@/lib/books/getBook";
 import Link from "next/link";
 import DeleteBook from "@/app/actions/Delete";
 import Search from "@/app/components/Search";
 
 const BookPage = async ({ params, searchParams }) => {
-  await requireUser();
-  const search = await searchParams
-  const searchText = search.search ?? ""
+  await requireSearchAccess();
+  const search = await searchParams;
+  const searchText = search.search ?? "";
 
-const include = {
-  quotes: {
-    where: {
-      text: {
-        contains: searchText,
-        mode: "insensitive",
+  const include = {
+    quotes: {
+      where: {
+        text: {
+          contains: searchText,
+          mode: "insensitive",
+        },
       },
     },
-  },
-};
+  };
 
   const { id } = await params;
-  const book = await prisma.books.findUnique({
-    where: {
-      id: Number.parseInt(id),
-    },
-    include
-  });
-  console.log(book);
+
+  const book = await getBook({ id, searchText, include });
   if (!book) {
     return (
       <main>
@@ -36,14 +31,16 @@ const include = {
       </main>
     );
   }
-  
+
   return (
     <main>
       <Link href="/dashboard">← Back to Bookshelf</Link>
-      <Search  action={`/book/${id}`}
+      <Search
+        action={`/book/${id}`}
         placeholder="Search Your Quotes..."
         queryName="search"
-        defaultValue={searchText}/>
+        defaultValue={searchText}
+      />
       {book.cover_img && (
         <img src={book.cover_img} alt={`${book.title} cover`} width={150} />
       )}
@@ -53,10 +50,10 @@ const include = {
       </p>
       <strong>Genres: {book.genres.join(" • ")}</strong>
       <div>
-        <strong>Added:</strong> {book.created_at?.toLocaleDateString()}
+        <strong>Added:</strong> {new Date(book.created_at).toLocaleDateString()}
       </div>
       <strong>Updated: </strong>
-      {book.updated_at?.toLocaleDateString()}
+      <strong>Updated:</strong> {new Date(book.updated_at).toLocaleDateString()}
       <Link href={`/book/${id}/edit`}>Edit Book</Link>
       <form action={DeleteBook}>
         <input type="hidden" name="id" value={book.id} />

@@ -1,12 +1,13 @@
 "use server";
-import requireUser from "@/lib/auth/requireUser";
+import requireWriteAccess from "@/lib/auth/requireWriteAccess";
 import requireOwnership from "@/lib/auth/requireOwnership";
 import prisma from "@/lib/prisma";
+import { invalidateDashboard, invalidateBook } from "@/lib/cache/Invalidate";
 import { redirect } from "next/navigation";
 import { getResourceType } from "@/lib/cloudinary/getResourceType";
 import DeleteFile from "@/lib/uploads/DeleteFile";
 const DeleteBook = async (formData) => {
-  await requireUser();
+  await requireWriteAccess();
   const bookId = formData.get("id");
 
   await requireOwnership("books", bookId);
@@ -46,10 +47,10 @@ const DeleteBook = async (formData) => {
       id: Number.parseInt(bookId),
     },
   });
-
-  console.log("BOOK DELETED");
-  console.log("ABOUT TO REDIRECT");
-
+ 
+//redis cache invalidation
+await invalidateDashboard(book.user_id);
+await invalidateBook(bookId);
   redirect("/dashboard");
 };
 export default DeleteBook;

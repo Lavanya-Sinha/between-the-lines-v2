@@ -1,6 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
-import prisma from "@/lib/prisma";
+import { deleteSession } from "@/lib/sessions/session";
 import { redirect } from "next/navigation";
 
 const Logout =  async()=>{
@@ -9,21 +9,7 @@ const sessionCookie = cookieStore.get("sessionId")
 if(!sessionCookie){
     redirect("/")
 }
-const session = await prisma.sessions.findUnique({
-    where:{
-        session_id : sessionCookie.value
-    }
-})
-if(!session){
-redirect("/")
-}
-
-await prisma.sessions.delete({
-    where:{
-        session_id : sessionCookie.value,
-    }
-})
-
+await deleteSession(sessionCookie.value);
 cookieStore.delete("sessionId")
 redirect("/")
 }

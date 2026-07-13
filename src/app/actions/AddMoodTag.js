@@ -1,8 +1,10 @@
 "use server";
+import requireWriteAccess from "@/lib/auth/requireWriteAccess";
 import requireOwnership from "@/lib/auth/requireOwnership";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { MoodTagValidation } from "@/lib/validation/MoodTagValidation";
+import { invalidateQuote } from "@/lib/cache/Invalidate";
 
 const AddMoodTag = async (formData) => {
   const rawTagName = formData.get("tag_name");
@@ -16,6 +18,8 @@ const AddMoodTag = async (formData) => {
     throw new Error(validation.error)
   }
   const {tagName} = validation.data
+
+  await requireWriteAccess()
 
 await requireOwnership("quotes", quoteId);
   const existingTag = await prisma.mood_tags.findFirst({
@@ -47,6 +51,7 @@ await requireOwnership("quotes", quoteId);
         }
     }
   })
+  await invalidateQuote(quoteId)
   redirect(`/book/${id}/quote/${quoteId}`);
 };
 

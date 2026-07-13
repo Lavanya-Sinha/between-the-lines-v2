@@ -1,6 +1,7 @@
 "use server";
-import requireUser from "@/lib/auth/requireUser";
+import requireWriteAccess from "@/lib/auth/requireWriteAccess";
 import prisma from "@/lib/prisma";
+import { invalidateDashboard } from "@/lib/cache/Invalidate";
 import { redirect } from "next/navigation";
 import { BookValidation } from "@/lib/validation/BookValidation";
 import SaveFile from "@/lib/uploads/SaveFile";
@@ -21,7 +22,7 @@ const CreateBook = async (formData) => {
   }
   const { title, author, genres } = validation.data;
 
-  const user = await requireUser();
+ const user = await requireWriteAccess();
 
   let saveCover = null
 if (bookCover && bookCover.size > 0) {
@@ -43,6 +44,8 @@ if (bookCover && bookCover.size > 0) {
       },
     },
   });
+//redis cache invalidation
+await invalidateDashboard(user.id);
   redirect("/dashboard");
 };
 export default CreateBook;

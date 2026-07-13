@@ -1,12 +1,11 @@
-import requireUser from "@/lib/auth/requireUser";
-import prisma from "@/lib/prisma";
+import requireSearchAccess from "@/lib/auth/requireSearchAccess";
 import Link from "next/link";
 import Logout from "../actions/Logout";
 import Search from "../components/Search";
-
+import getDashboard from "@/lib/books/getDashboard";
 
 export default async function Dashboard({searchParams}) {
-  const user = await requireUser();
+  const user = await requireSearchAccess()
   const params = await searchParams
   const search = params.search ?? ""
   const where = {
@@ -33,9 +32,11 @@ export default async function Dashboard({searchParams}) {
       }
     ]
   }
-  const books = await prisma.books.findMany({
+  const books = await getDashboard({
+    userId : user.id,
+    search,
     where
-  });
+  })
   console.log(books);
   return (
     <main>
@@ -68,8 +69,8 @@ export default async function Dashboard({searchParams}) {
               <h1>{book.title}</h1>
               <p>{book.author}</p>
               <p>{book.genres.join(" • ")}</p>
-              <p>{`Added On ${book.created_at?.toLocaleString()}`}</p>
-              <p>{`Updated On ${book.updated_at?.toLocaleString()}`}</p>
+              <p>{`Added On ${new Date(book.created_at).toLocaleDateString()}`}</p>
+              <p>{`Updated On ${new Date(book.updated_at).toLocaleDateString()}`}</p>
             </Link>
           </div>
         );

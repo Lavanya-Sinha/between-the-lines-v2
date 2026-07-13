@@ -1,8 +1,11 @@
 "use server";
+
+import requireWriteAccess from "@/lib/auth/requireWriteAccess";
 import requireOwnership from "@/lib/auth/requireOwnership";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { QuoteValidation } from "@/lib/validation/QuoteValidation";
+import { invalidateBook } from "@/lib/cache/Invalidate";
 
 const CreateQuote = async(formData)=>{
     const rawQuoteText = formData.get("quote-text")
@@ -14,6 +17,7 @@ const CreateQuote = async(formData)=>{
     }
     const {text} = validation.data
 
+    await requireWriteAccess()
 await requireOwnership("books", bookId)
     await prisma.quotes.create({
         data: {
@@ -21,6 +25,8 @@ await requireOwnership("books", bookId)
             book_id : Number.parseInt(bookId)
         }
     })
+    // redis cache invalidation
+    await invalidateBook(bookId);
      redirect(`/book/${bookId}`);
 }
 export default CreateQuote

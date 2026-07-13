@@ -6,6 +6,7 @@ import UpdateDoodle from "@/app/actions/UpdateDoodle";
 import { drawLine, replayCanvas } from "@/lib/canvas/replayCanvas";
 import DeleteDoodle from "@/app/actions/DeleteDoodle";
 import DoodleToolbar from "@/app/components/DoodleToolbar";
+import simplifyCanvas from "@/lib/canvas/simplifyCanvas";
 
 const DoodleClient = ({ doodle, quoteId, id }) => {
   const canvasRef = useRef(null);
@@ -95,11 +96,28 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
     redoRef.current = [];
   };
 
+  
   const handleCanvasSave = async () => {
+    const EPSILON = 0.5
+    const optimizedCanvas = simplifyCanvas(strokeRef.current, EPSILON)
+
+ const originalSize = JSON.stringify(strokeRef.current).length;
+const optimizedSize = JSON.stringify(optimizedCanvas).length;
+
+console.log("Original JSON:", originalSize);
+console.log("Optimized JSON:", optimizedSize);
+console.log(
+  `Reduction: ${(
+    ((originalSize - optimizedSize) / originalSize) *
+    100
+  ).toFixed(2)}%`
+);
+
     if (doodle) {
-      await UpdateDoodle(doodle.id, strokeRef.current);
+      await UpdateDoodle(doodle.id, optimizedCanvas);
+      return;
     }
-    await CreateDoodle(quoteId, strokeRef.current);
+    await CreateDoodle(quoteId, optimizedCanvas);
   };
 
   useEffect(() => {

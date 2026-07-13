@@ -1,4 +1,6 @@
 "use server";
+import { headers } from "next/headers";
+import rateLimit from "@/lib/rate-limit/rateLimit";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
@@ -9,6 +11,20 @@ const rawDisplayName = FormData.get("display_name")
 const rawEmail = FormData.get("email")
 const rawPassword = FormData.get("password")
 const rawConfirmPassword = FormData.get("confirm_password")
+
+const headerList = await headers()
+const forwardedFor = headerList.get("x-forwarded-for")
+const ip = forwardedFor? forwardedFor.split(",")[0].trim() : "127.0.0.1"
+const signupRateLimit = await rateLimit({
+    prefix: "signup",
+    key: ip,
+    limit: 5,
+    window: 60
+})
+
+if(!signupRateLimit.allowed){
+ throw new Error(`Too Many Sign-Up Attempts. Retry in ${signupRateLimit.retryAfter} seconds.`)
+}
 
 const validation = SignupValidation({
     displayName: rawDisplayName,
