@@ -1,7 +1,10 @@
 import prisma from "../prisma";
 import redis from "../redis";
+import log from "../logging/logger";
 
 const getDashboard = async ({ userId, search, where }) => {
+try {
+  
   const normalizeSearch = search.trim().toLowerCase();
   const cacheKey = `dashboard:${userId}:${normalizeSearch}`;
 
@@ -31,6 +34,20 @@ const getDashboard = async ({ userId, search, where }) => {
   }
 
   return bookShelf;
+} catch (error) {
+   log({
+        level:"ERROR",
+
+        file:"src/lib/books/getDashboard.js",
+
+        operation:"Fetch Dashboard",
+
+        message:"Failed to fetch Dashboard.",
+
+        error:error.message
+    })
+    throw error
+}
 };
 
 export default getDashboard;

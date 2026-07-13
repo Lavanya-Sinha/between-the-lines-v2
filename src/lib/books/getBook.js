@@ -1,3 +1,4 @@
+import log from "../logging/logger";
 import prisma from "../prisma";
 import redis from "../redis";
 
@@ -13,7 +14,18 @@ const getBook = async ({ id, searchText, include }) => {
       return JSON.parse(cachedBook);
     }
   } catch (error) {
-    console.error("Redis read failed:", error);
+     log({
+        level:"ERROR",
+
+        file:"src/lib/books/getBook.js",
+
+        operation:"Fetch Book",
+
+        message:"Failed to fetch book.",
+
+        error:error.message
+    })
+    throw error
   }
 
   console.log("Book Cache Miss");

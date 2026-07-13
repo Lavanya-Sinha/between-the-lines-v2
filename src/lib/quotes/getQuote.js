@@ -1,7 +1,10 @@
 import prisma from "../prisma";
 import redis from "../redis";
+import log from "../logging/logger";
 
 const getQuote = async ({ quoteId, searchReflection, include }) => {
+try {
+  
   const normalizeSearch = searchReflection.trim().toLowerCase();
   const cacheKey = `quote:${quoteId}:${normalizeSearch}`;
 
@@ -34,6 +37,20 @@ const getQuote = async ({ quoteId, searchReflection, include }) => {
   }
 
   return quote;
+} catch (error) {
+   log({
+        level:"ERROR",
+
+        file:"src/lib/quotes/getQuotes.js",
+
+        operation:"Fetch Quote",
+
+        message:"Failed to fetch quote.",
+
+        error:error.message
+    })
+    throw error
+}
 };
 
 export default getQuote;

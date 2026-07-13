@@ -1,7 +1,10 @@
 import requireUser from "./requireUser";
 import prisma from "../prisma";
+import log from "../logging/logger";
 
 const requireOwnership = async (model, resourceId) => {
+try {
+  
   const user = await requireUser();
 
   let resource;
@@ -104,6 +107,17 @@ const requireOwnership = async (model, resourceId) => {
     throw new Error("Unsupported model.");
   }
   return resource;
+  
+} catch (error) {
+  log({
+    level:"WARN",
+    file:"src/lib/auth/requireOwnership.js",
+    operation:"Authorization",
+    message:"Ownership check failed.",
+    userId:user.id
+})
+throw error
+}
 };
 
 export default requireOwnership;
