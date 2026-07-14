@@ -6,8 +6,11 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { QuoteValidation } from "@/lib/validation/QuoteValidation";
 import { invalidateBook } from "@/lib/cache/Invalidate";
+import log from "@/lib/logging/logger";
 
 const CreateQuote = async(formData)=>{
+try {
+    
     const rawQuoteText = formData.get("quote-text")
     const bookId = formData.get("id")
  
@@ -27,6 +30,25 @@ await requireOwnership("books", bookId)
     })
     // redis cache invalidation
     await invalidateBook(bookId);
+
+    log({
+      level: "INFO",
+      file: "src/app/actions/CreateQuote.js",
+      operation: "Add A Quote",
+      message: "Quote Added",
+      userId: user.id,
+    });
      redirect(`/book/${bookId}`);
+} catch (error) {
+    log({
+      level: "ERROR",
+      file: "src/app/actions/CreateQuote.js",
+      operation: "Add Quote",
+      message: "Failed to Add The Quote.",
+      error: error.message,
+    });
+
+    throw error;
+}
 }
 export default CreateQuote
