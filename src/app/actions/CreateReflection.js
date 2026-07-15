@@ -22,7 +22,7 @@ try {
     await requireWriteAccess()
 
     await requireOwnership("quotes", quoteId);
-    await prisma.reflections.create({
+    const user = await prisma.reflections.create({
         data: {
             content,
             quote_id : Number.parseInt(quoteId)

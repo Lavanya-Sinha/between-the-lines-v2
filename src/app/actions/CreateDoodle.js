@@ -11,7 +11,7 @@ const CreateDoodle = async(quoteId, canvasData)=>{
 try {
     await requireWriteAccess()
     const quote = await requireOwnership("quotes", quoteId);
-    await prisma.doodles.create({
+   const user = await prisma.doodles.create({
         data:{
             canvas_data : canvasData,
             quote:{

@@ -77,7 +77,7 @@ const SignUp = async (FormData) => {
       message: "User signed up successfully.",
       userId: user.id,
     });
-    redirect("/login");
+    redirect(`/login?email=${encodeURIComponent(email)}&registered=true`);
   } catch (error) {
     log({
       level: "ERROR",

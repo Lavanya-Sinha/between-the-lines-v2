@@ -22,7 +22,7 @@ try {
    
    console.log("file saved");
    
-   await prisma.attachments.create({
+  const user = await prisma.attachments.create({
        data:{
            file_name: saveFile.fileName,
            file_url: saveFile.fileUrl,

@@ -18,7 +18,7 @@ const DeleteQuote = async (FormData) => {
           quote_id: quoteId,
         },
       });
-      await prisma.quotes.delete({
+     const user = await prisma.quotes.delete({
         where: {
           id: quoteId,
         },

@@ -8,26 +8,26 @@ import { QuoteValidation } from "@/lib/validation/QuoteValidation";
 import { invalidateBook } from "@/lib/cache/Invalidate";
 import log from "@/lib/logging/logger";
 
-const CreateQuote = async(formData)=>{
-try {
-    
-    const rawQuoteText = formData.get("quote-text")
-    const bookId = formData.get("id")
- 
-    const validation = QuoteValidation({text: rawQuoteText})
-    if(!validation.success){
-      throw new Error(validation.error)
-    }
-    const {text} = validation.data
+const CreateQuote = async (formData) => {
+  try {
+    const rawQuoteText = formData.get("quote-text");
+    const bookId = formData.get("id");
 
-    await requireWriteAccess()
-await requireOwnership("books", bookId)
-    await prisma.quotes.create({
-        data: {
-            text,
-            book_id : Number.parseInt(bookId)
-        }
-    })
+    const validation = QuoteValidation({ text: rawQuoteText });
+    if (!validation.success) {
+      throw new Error(validation.error);
+    }
+    const { text } = validation.data;
+
+    await requireWriteAccess();
+    await requireOwnership("books", bookId);
+
+    const user = await prisma.quotes.create({
+      data: {
+        text,
+        book_id: Number.parseInt(bookId),
+      },
+    });
     // redis cache invalidation
     await invalidateBook(bookId);
 
@@ -38,8 +38,8 @@ await requireOwnership("books", bookId)
       message: "Quote Added",
       userId: user.id,
     });
-     redirect(`/book/${bookId}`);
-} catch (error) {
+    redirect(`/book/${bookId}`);
+  } catch (error) {
     log({
       level: "ERROR",
       file: "src/app/actions/CreateQuote.js",
@@ -49,6 +49,6 @@ await requireOwnership("books", bookId)
     });
 
     throw error;
-}
-}
-export default CreateQuote
+  }
+};
+export default CreateQuote;

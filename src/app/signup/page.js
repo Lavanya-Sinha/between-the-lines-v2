@@ -1,6 +1,7 @@
 import SignUp from "../actions/SignUp"
 import PasswordInput from "../components/PasswordInput"
 import GoogleSignIn from "../components/GoogleSignIn"
+import Link from "next/link"
 const SignUpUser = ()=>{
     return(
 <main>
@@ -21,6 +22,8 @@ const SignUpUser = ()=>{
     </form>
     <strong>OR</strong>
     <GoogleSignIn/>
+    Already have an account?
+     <Link href="/login">← Log In</Link>
 </main>
     )
 }

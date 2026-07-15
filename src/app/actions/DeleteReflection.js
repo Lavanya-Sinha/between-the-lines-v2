@@ -14,7 +14,7 @@ try {
     const quoteId = formData.get("quote_id")
     const bookId = formData.get("book_id")
     await requireOwnership("reflections", reflectionId)
-    await prisma.reflections.delete({
+    const user =await prisma.reflections.delete({
         where:{
             id : reflectionId
         }

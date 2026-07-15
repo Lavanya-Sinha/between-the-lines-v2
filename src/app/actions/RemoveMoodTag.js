@@ -13,7 +13,7 @@ const RemoveMoodTag = async (FormData) => {
     const tagId = Number.parseInt(FormData.get("tag_id"));
     const bookId = FormData.get("book_id");
     await requireOwnership("quotes", quoteId);
-    await prisma.quotes.update({
+    const user = await prisma.quotes.update({
       where: {
         id: quoteId,
       },

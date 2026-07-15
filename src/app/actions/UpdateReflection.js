@@ -22,7 +22,7 @@ if(!validation.success){
 const{content} = validation.data
 
 await requireOwnership("reflections", reflectionId)
-  await prisma.reflections.update({
+ const user = await prisma.reflections.update({
   where : {
     id : reflectionId
   }, 

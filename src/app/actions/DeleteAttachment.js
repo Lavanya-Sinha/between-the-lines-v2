@@ -27,7 +27,7 @@ const DeleteAttachment = async (formData) => {
   
     await DeleteFile(attachment.public_id, getResourceType(attachment.mime_type))
   
-    await prisma.attachments.delete({
+    const user = await prisma.attachments.delete({
       where: {
         id: Number.parseInt(attachmentId),
       },

@@ -28,7 +28,7 @@ const UpdateDoodle = async (doodleId, canvasData) => {
       file: "src/app/actions/UpdateDoodle.js",
       operation: "Update Doodle",
       message: "Doodle Updated.",
-      userId: user.id,
+      userId: null,
     });
     redirect(`/book/${doodle.quote.book.id}/quote/${doodle.quote.id}`);
   } catch (error) {

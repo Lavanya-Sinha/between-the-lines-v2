@@ -41,7 +41,7 @@ const AddMoodTag = async (formData) => {
       })
     }
   
-    await prisma.quotes.update({
+    const user = await prisma.quotes.update({
       where:{
           id : quoteId
       },

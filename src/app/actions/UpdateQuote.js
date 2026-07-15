@@ -22,7 +22,7 @@ const UpdateQuote = async (FormData) => {
     await requireWriteAccess();
 
     await requireOwnership("quotes", quoteId);
-    await prisma.quotes.update({
+    const user = await prisma.quotes.update({
       where: {
         id: Number.parseInt(quoteId),
       },

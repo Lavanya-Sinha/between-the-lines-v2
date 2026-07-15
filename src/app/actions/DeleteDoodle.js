@@ -13,7 +13,7 @@ try {
     const id = formData.get("id")
     await requireWriteAccess()
     await requireOwnership("quotes",quoteId)
-    await prisma.doodles.delete({
+    const user = await prisma.doodles.delete({
         where: {
             quote_id: Number.parseInt(quoteId)
         }
