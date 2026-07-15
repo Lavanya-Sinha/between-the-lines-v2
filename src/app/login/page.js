@@ -1,5 +1,6 @@
 import LogIn from "../actions/LogIn"
 import PasswordInput from "../components/PasswordInput"
+import GoogleSignIn from "../components/GoogleSignIn"
 
 const LoginPage = ()=>{
     return(
@@ -13,6 +14,8 @@ const LoginPage = ()=>{
                 <PasswordInput name="password" placeholder="Enter Your Password"/>
                 <button type="submit">Log In</button>
             </form>
+            <strong>OR</strong>
+            <GoogleSignIn/>
         </main>
     )
 }

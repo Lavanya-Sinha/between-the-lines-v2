@@ -7,11 +7,17 @@ datasource db {
   provider = "postgresql"
 }
 
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+}
+
 model users {
   id            Int       @id @default(autoincrement())
   display_name  String
   email         String    @unique
-  password_hash String
+  password_hash String?
+  provider       AuthProvider   @default(EMAIL)
   created_at    DateTime? @default(now())
   books         books[]
 }

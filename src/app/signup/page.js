@@ -1,5 +1,6 @@
 import SignUp from "../actions/SignUp"
 import PasswordInput from "../components/PasswordInput"
+import GoogleSignIn from "../components/GoogleSignIn"
 const SignUpUser = ()=>{
     return(
 <main>
@@ -18,6 +19,8 @@ const SignUpUser = ()=>{
        <PasswordInput name="confirm_password" placeholder="Confirm Password" />
         <button type="submit">Create Account</button>
     </form>
+    <strong>OR</strong>
+    <GoogleSignIn/>
 </main>
     )
 }

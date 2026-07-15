@@ -20,7 +20,13 @@ services:
  redis: 
   image: redis:8
 
-
+ lgtm:
+  image: grafana/otel-lgtm
+  container_name: lgtm
+  ports:
+    - "3001:3000" # Grafana UI
+    - "4317:4317" # OTLP gRPC
+    - "4318:4318" # OTLP HTTP 
 volumes:
  postgres_data:
 

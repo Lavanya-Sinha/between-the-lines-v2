@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { SignupValidation } from "@/lib/validation/SignupValidation";
 import log from "@/lib/logging/logger";
 
+
 const SignUp = async (FormData) => {
   try {
     const rawDisplayName = FormData.get("display_name");
@@ -62,7 +63,7 @@ const SignUp = async (FormData) => {
       throw new Error("User Already Exists!");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    await prisma.users.create({
+   const user = await prisma.users.create({
       data: {
         display_name: displayName,
         email,
