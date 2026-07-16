@@ -32,7 +32,6 @@ const CreateBook = async (formData) => {
      saveCover = await SaveFile(bookCover, "covers")
   }
   
-  
     await prisma.books.create({
       data: {
         title,

@@ -2,7 +2,7 @@ import prisma from "../prisma";
 import redis from "../redis";
 import log from "../logging/logger";
 
-const getQuote = async ({ quoteId, searchReflection, include }) => {
+const getQuote = async ({ quoteId, searchReflectionz }) => {
 try {
   
   const normalizeSearch = searchReflection.trim().toLowerCase();
@@ -20,6 +20,21 @@ try {
   }
 
   console.log("Quote Cache Miss");
+
+    const include = {
+    reflections: {
+      where: {
+        content: {
+          contains: searchReflection,
+          mode: "insensitive",
+        },
+      },
+    },
+    mood_tags: true,
+    doodle: true,
+    attachments: true,
+  };
+
 
   const quote = await prisma.quotes.findUnique({
     where: {

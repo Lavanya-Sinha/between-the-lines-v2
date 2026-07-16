@@ -2,7 +2,7 @@ import log from "../logging/logger";
 import prisma from "../prisma";
 import redis from "../redis";
 
-const getBook = async ({ id, searchText, include }) => {
+const getBook = async ({ id, searchText }) => {
   const normalizeSearch = searchText.trim().toLowerCase();
   const cacheKey = `book:${id}:${normalizeSearch}`;
 
@@ -29,6 +29,19 @@ const getBook = async ({ id, searchText, include }) => {
   }
 
   console.log("Book Cache Miss");
+
+
+  const include = {
+    quotes: {
+      where: {
+        text: {
+          contains: normalizeSearch,
+          mode: "insensitive",
+        },
+      },
+    },
+  };
+
 
   const book = await prisma.books.findUnique({
     where: {

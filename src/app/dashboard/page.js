@@ -8,36 +8,12 @@ export default async function Dashboard({searchParams}) {
   const user = await requireSearchAccess()
   const params = await searchParams
   const search = params.search ?? ""
-  const where = {
-    user_id : user.id
-  }
-  if(search){
-    where.OR = [
-      {
-        title:{
-          contains: search,
-          mode: "insensitive"
-        },
-      },
-      {
-        author:{
-          contains: search,
-          mode: "insensitive"
-        }
-      },
-      {
-        genres:{
-          has: search,
-        }
-      }
-    ]
-  }
+
   const books = await getDashboard({
     userId : user.id,
-    search,
-    where
+    search
   })
-  console.log(books);
+
   return (
     <main>
       <header>

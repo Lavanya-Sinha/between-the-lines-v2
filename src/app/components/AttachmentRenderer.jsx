@@ -1,4 +1,5 @@
 import AttachmentDeletionForm from "./AttachmentDeletionForm";
+import { CldImage } from "next-cloudinary";
 
 export const AttachmentRenderer = ({ attachment, quoteId, id }) => {
   const isImage = attachment.mime_type.startsWith("image/");
@@ -9,10 +10,11 @@ export const AttachmentRenderer = ({ attachment, quoteId, id }) => {
     return (
       <div>
         <a href={attachment.file_url} target="_blank" rel="noopener noreferrer">
-          <img
+          <CldImage
             src={attachment.file_url}
             alt={attachment.file_name}
             width={250}
+          
           />
         </a>
        <AttachmentDeletionForm attachmentId={attachment.id} quoteId={quoteId.id} id={id}/>
@@ -20,8 +22,6 @@ export const AttachmentRenderer = ({ attachment, quoteId, id }) => {
     );
   }
   if (isAudio) {
-    console.log(attachment.name);
-console.log(attachment.type);
     return (
       <div>
         <audio controls style={{ width: "300px" }}>

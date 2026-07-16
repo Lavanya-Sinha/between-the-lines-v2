@@ -3,26 +3,16 @@ import getBook from "@/lib/books/getBook";
 import Link from "next/link";
 import DeleteBook from "@/app/actions/Delete";
 import Search from "@/app/components/Search";
+import { CldImage } from "next-cloudinary";
 
 const BookPage = async ({ params, searchParams }) => {
   await requireSearchAccess();
   const search = await searchParams;
   const searchText = search.search ?? "";
 
-  const include = {
-    quotes: {
-      where: {
-        text: {
-          contains: searchText,
-          mode: "insensitive",
-        },
-      },
-    },
-  };
-
   const { id } = await params;
 
-  const book = await getBook({ id, searchText, include });
+  const book = await getBook({ id, searchText });
   if (!book) {
     return (
       <main>
@@ -42,7 +32,7 @@ const BookPage = async ({ params, searchParams }) => {
         defaultValue={searchText}
       />
       {book.cover_img && (
-        <img src={book.cover_img} alt={`${book.title} cover`} width={150} />
+        <CldImage src={book.cover_img} alt={`${book.title} cover`} width={150} height={225} sizes="(max-width: 768px) 120px, 150px"/>
       )}
       <h1>{book.title}</h1>
       <p>
@@ -53,7 +43,7 @@ const BookPage = async ({ params, searchParams }) => {
         <strong>Added:</strong> {new Date(book.created_at).toLocaleDateString()}
       </div>
       <strong>Updated: </strong>
-      <strong>Updated:</strong> {new Date(book.updated_at).toLocaleDateString()}
+       {new Date(book.updated_at).toLocaleDateString()}
       <Link href={`/book/${id}/edit`}>Edit Book</Link>
       <form action={DeleteBook}>
         <input type="hidden" name="id" value={book.id} />

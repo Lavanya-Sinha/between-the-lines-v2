@@ -1,15 +1,39 @@
-const Search = ({ action, placeholder, queryName, defaultValue }) => {
+"use client"
+
+import { useState, useEffect } from "react";
+import useDebounce from "../hooks/useDebounce";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+
+const Search = ({ placeholder, defaultValue }) => {
+  const [query, setQuery] = useState(defaultValue?? "")
+  const router = useRouter();
+const pathname = usePathname();
+const searchParams = useSearchParams();
+const debouncedQuery = useDebounce(query, 300);
+
+useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    const currentSearch = searchParams.get("search") ?? "";
+
+if (currentSearch === debouncedQuery) {
+    return;
+}
+
+    if (debouncedQuery) {
+        params.set("search", debouncedQuery);
+    } else {
+        params.delete("search");
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+}, [debouncedQuery]);
   return (
     <div>
-      <form action={action}>
-        <input
-          type="search"
-          name={queryName}
-          placeholder={placeholder}
-          defaultValue={defaultValue}
+     <input
+            type="search"
+            placeholder={placeholder}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
         />
-        <button type="submit">Search</button>
-      </form>
     </div>
   );
 };

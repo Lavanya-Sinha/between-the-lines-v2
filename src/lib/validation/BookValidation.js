@@ -3,7 +3,7 @@ export const BookValidation = ({ title, author, genres }) => {
   const trimAuthor = author.trim();
   const trimGenres = genres
      .split(",")
-    .map((genre) => genre.trim())
+    .map((genre) => genre.trim().toLowerCase())
     .filter(Boolean);
 
   if (!trimTitle) {

@@ -15,22 +15,8 @@ const QuotePage = async ({ params, searchParams }) => {
   const searchContent = await searchParams;
   const searchReflection = searchContent.search ?? "";
 
-  const include = {
-    reflections: {
-      where: {
-        content: {
-          contains: searchReflection,
-          mode: "insensitive",
-        },
-      },
-    },
-    mood_tags: true,
-    doodle: true,
-    attachments: true,
-  };
-
   const { id, quoteId } = await params;
-  const quote = await getQuote({quoteId, searchReflection, include})
+  const quote = await getQuote({quoteId, searchReflection})
 
   if (!quote) {
   return (
