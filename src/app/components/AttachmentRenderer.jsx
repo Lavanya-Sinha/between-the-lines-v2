@@ -1,5 +1,5 @@
 import AttachmentDeletionForm from "./AttachmentDeletionForm";
-import { CldImage } from "next-cloudinary";
+import CloudinaryImage from "./CloudinaryImage";
 
 export const AttachmentRenderer = ({ attachment, quoteId, id }) => {
   const isImage = attachment.mime_type.startsWith("image/");
@@ -10,11 +10,11 @@ export const AttachmentRenderer = ({ attachment, quoteId, id }) => {
     return (
       <div>
         <a href={attachment.file_url} target="_blank" rel="noopener noreferrer">
-          <CldImage
+          <CloudinaryImage
             src={attachment.file_url}
             alt={attachment.file_name}
             width={250}
-          
+            height={300}
           />
         </a>
        <AttachmentDeletionForm attachmentId={attachment.id} quoteId={quoteId.id} id={id}/>

@@ -2,11 +2,23 @@ import requireUser from "@/lib/auth/requireUser";
 import DeleteReflection from "@/app/actions/DeleteReflection";
 import Link from "next/link";
 import getReflection from "@/lib/reflections/getReflection";
+import AIDiscussionButton from "@/app/components/AIDiscussionButton";
+import getActiveDiscussion from "@/lib/discussions/getActiveDiscussion";
+import ContinueDiscussionButton from "@/app/components/ContinueDiscussionButton";
+import getDiscussions from "@/lib/discussions/getDiscussions";
 
 const ReflectionPage = async ({ params }) => {
   await requireUser();
   const { id, quoteId, reflectionId } = await params;
-  const reflection = await getReflection(reflectionId)
+  const reflection = await getReflection(reflectionId);
+
+  const activeDiscussion = await getActiveDiscussion({ reflectionId });
+
+  const discussions = await getDiscussions({ reflectionId });
+
+  const completedDiscussions = discussions.filter(
+  discussion => discussion.ended_at !== null
+);
 
   return (
     <main>
@@ -25,7 +37,8 @@ const ReflectionPage = async ({ params }) => {
       <p>{reflection.content}</p>
 
       <p>
-        <strong>Written on:</strong> {new Date(reflection.created_at).toDateString()}
+        <strong>Written on:</strong>{" "}
+        {new Date(reflection.created_at).toDateString()}
       </p>
 
       <br />
@@ -45,6 +58,40 @@ const ReflectionPage = async ({ params }) => {
 
         <button>Delete Reflection</button>
       </form>
+
+      {activeDiscussion ? (
+    <ContinueDiscussionButton
+        discussion={activeDiscussion}
+    />
+) : (
+    <AIDiscussionButton
+        reflectionId={reflection.id}
+    />
+)}
+      <hr />
+      <h2>Previous Discussions</h2>
+
+{completedDiscussions.length === 0 ? (
+    <p>No previous discussions yet.</p>
+) : (
+    completedDiscussions.map((discussion) => (
+        <Link
+            key={discussion.id}
+            href={`/book/${id}/quote/${quoteId}/reflection/${reflectionId}/discussions/${discussion.id}`}
+        >
+            <div>
+                <p>
+                    Discussion •{" "}
+                    {new Date(discussion.created_at).toLocaleDateString()}
+                </p>
+
+                <p>
+                    {discussion.messages.length} messages
+                </p>
+            </div>
+        </Link>
+    ))
+)}
     </main>
   );
 };

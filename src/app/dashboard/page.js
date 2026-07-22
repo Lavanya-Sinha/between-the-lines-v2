@@ -40,6 +40,7 @@ export default async function Dashboard({searchParams}) {
                   src={book.cover_img}
                   alt={`${book.title} cover`}
                   width={150}
+                  height={200}
                 />
               )}
               <h1>{book.title}</h1>

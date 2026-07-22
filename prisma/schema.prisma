@@ -58,9 +58,38 @@ model reflections {
 
   quote_id Int
 
+   discussions discussions[]
+
   quote quotes @relation(fields: [quote_id], references: [id], onDelete: Cascade)
 }
 
+model discussions {
+  id          Int  @id @default(autoincrement())
+  reflection_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  ended_at   DateTime?
+  title      String?
+
+  reflection reflections @relation(fields: [reflection_id], references: [id], onDelete: Cascade)
+
+  messages discussion_messages[]
+}
+
+model discussion_messages {
+  id    Int @id @default(autoincrement())
+  discussion_id Int 
+  role   MessageRole
+  content  String @db.Text
+  created_at DateTime @default(now())
+
+   discussion discussions @relation(fields: [discussion_id], references: [id], onDelete: Cascade)
+} 
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
 model mood_tags {
   id         Int       @id @default(autoincrement())
   name       String

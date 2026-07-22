@@ -2,7 +2,7 @@ import prisma from "../prisma";
 import redis from "../redis";
 import log from "../logging/logger";
 
-const getQuote = async ({ quoteId, searchReflectionz }) => {
+const getQuote = async ({ quoteId, searchReflection }) => {
 try {
   
   const normalizeSearch = searchReflection.trim().toLowerCase();

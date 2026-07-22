@@ -3,7 +3,7 @@ import getBook from "@/lib/books/getBook";
 import Link from "next/link";
 import DeleteBook from "@/app/actions/Delete";
 import Search from "@/app/components/Search";
-import { CldImage } from "next-cloudinary";
+import CloudinaryImage from "@/app/components/CloudinaryImage";
 
 const BookPage = async ({ params, searchParams }) => {
   await requireSearchAccess();
@@ -32,7 +32,7 @@ const BookPage = async ({ params, searchParams }) => {
         defaultValue={searchText}
       />
       {book.cover_img && (
-        <CldImage src={book.cover_img} alt={`${book.title} cover`} width={150} height={225} sizes="(max-width: 768px) 120px, 150px"/>
+        <CloudinaryImage src={book.cover_img} alt={`${book.title} cover`} width={150} height={225} sizes="(max-width: 768px) 120px, 150px"/>
       )}
       <h1>{book.title}</h1>
       <p>

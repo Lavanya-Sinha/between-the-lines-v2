@@ -2,8 +2,10 @@
 
 import { useRef } from "react";
 import CreateAttachment from "@/app/actions/CreateAttachment";
+import { useRouter } from "next/navigation";
 
 const AttachmentsClient = ({quoteId, id}) => {
+  const router = useRouter()
   const selectedFileRef = useRef(null);
 
   const handleAttachmentSave = async() => {
@@ -15,6 +17,7 @@ const AttachmentsClient = ({quoteId, id}) => {
       console.log(entry);
     }
      await CreateAttachment(formData)
+     router.refresh()
   };
   const handleAttachmentChange = (event) => {
     selectedFileRef.current = event.target.files[0];
