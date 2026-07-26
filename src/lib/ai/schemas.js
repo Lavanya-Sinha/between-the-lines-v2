@@ -1,1 +1,0 @@
-//The structure of responses will be taken care of in this file

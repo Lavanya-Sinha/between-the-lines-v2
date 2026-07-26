@@ -1,29 +1,40 @@
-import requireUser from "@/lib/auth/requireUser";
 import DeleteReflection from "@/app/actions/DeleteReflection";
 import Link from "next/link";
 import getReflection from "@/lib/reflections/getReflection";
 import AIDiscussionButton from "@/app/components/AIDiscussionButton";
 import getActiveDiscussion from "@/lib/discussions/getActiveDiscussion";
 import ContinueDiscussionButton from "@/app/components/ContinueDiscussionButton";
-import getDiscussions from "@/lib/discussions/getDiscussions";
+import Search from "@/app/components/Search";
+import requireSearchAccess from "@/lib/auth/requireSearchAccess";
 
-const ReflectionPage = async ({ params }) => {
-  await requireUser();
+const ReflectionPage = async ({ params, searchParams }) => {
+  await requireSearchAccess();
+    const searchContent = await searchParams;
+  const searchDiscussion = searchContent.search ?? "";
   const { id, quoteId, reflectionId } = await params;
-  const reflection = await getReflection(reflectionId);
+  const reflection = await getReflection({
+    reflectionId,
+    searchDiscussion,
+  });
 
   const activeDiscussion = await getActiveDiscussion({ reflectionId });
-
-  const discussions = await getDiscussions({ reflectionId });
+  const discussions = reflection.discussions;
 
   const completedDiscussions = discussions.filter(
-  discussion => discussion.ended_at !== null
-);
+    (discussion) => discussion.ended_at !== null,
+  );
 
   return (
     <main>
       <Link href={`/book/${id}/quote/${quoteId}`}>← Back to Quote</Link>
 
+        <Search
+    action={`/book/${id}/quote/${quoteId}/reflection/${reflectionId}`}
+    placeholder="Search Your Discussions..."
+    queryName="search"
+    defaultValue={searchDiscussion}
+  />
+    
       <h2>{reflection.quote.book.title}</h2>
 
       <p>{reflection.quote.book.author}</p>
@@ -60,38 +71,32 @@ const ReflectionPage = async ({ params }) => {
       </form>
 
       {activeDiscussion ? (
-    <ContinueDiscussionButton
-        discussion={activeDiscussion}
-    />
-) : (
-    <AIDiscussionButton
-        reflectionId={reflection.id}
-    />
-)}
+        <ContinueDiscussionButton discussion={activeDiscussion} />
+      ) : (
+        <AIDiscussionButton reflectionId={reflection.id} />
+      )}
       <hr />
       <h2>Previous Discussions</h2>
 
-{completedDiscussions.length === 0 ? (
-    <p>No previous discussions yet.</p>
-) : (
-    completedDiscussions.map((discussion) => (
-        <Link
+      {completedDiscussions.length === 0 ? (
+        <p>No previous discussions yet.</p>
+      ) : (
+        completedDiscussions.map((discussion) => (
+          <Link
             key={discussion.id}
             href={`/book/${id}/quote/${quoteId}/reflection/${reflectionId}/discussions/${discussion.id}`}
-        >
+          >
             <div>
-                <p>
-                    Discussion •{" "}
-                    {new Date(discussion.created_at).toLocaleDateString()}
-                </p>
+              <p>
+                {discussions.title} •{" "}
+                {new Date(discussion.created_at).toLocaleDateString()}
+              </p>
 
-                <p>
-                    {discussion.messages.length} messages
-                </p>
+              <p>{discussion.messages.length} messages</p>
             </div>
-        </Link>
-    ))
-)}
+          </Link>
+        ))
+      )}
     </main>
   );
 };

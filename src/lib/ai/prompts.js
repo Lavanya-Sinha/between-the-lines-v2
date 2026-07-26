@@ -157,3 +157,45 @@ if (context.activeDiscussion) {
 }
 return messages
 }
+
+export const TITLE_GENERATION_PROMPT = `You are generating a title for a discussion in a reading journal.
+
+The title should:
+- Be between 2 and 6 words.
+- Capture the main topic or idea of the discussion.
+- Not use quotation marks.
+- Not end with punctuation.
+- Be concise and natural.
+- Return ONLY the title.`
+
+export const createTitleMessages = (context) => {
+  return [
+    {
+      role: "system",
+      content: TITLE_GENERATION_PROMPT,
+    },
+    {
+      role: "user",
+      content: `
+Book:
+${context.book.title}
+
+Author: 
+${context.book.author}
+
+Quote:
+${context.quote.text}
+
+
+Reflection:
+${context.reflection.content}
+
+User:
+${context.userMessage}
+
+Assistant:
+${context.aiResponse}
+      `.trim(),
+    },
+  ];
+};

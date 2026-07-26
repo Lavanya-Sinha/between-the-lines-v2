@@ -2,8 +2,9 @@ import prisma from "../prisma";
 import redis from "../redis";
 import log from "../logging/logger";
 
-const getReflection = async (reflectionId) => {
-  const cacheKey = `reflection:${reflectionId}`;
+const getReflection = async ({reflectionId, searchDiscussion = ""}) => {
+  const normalizeSearch = searchDiscussion.trim().toLowerCase();
+  const cacheKey = `reflection:${reflectionId}:${normalizeSearch}`;
 
   try {
     const cachedReflection = await redis.get(cacheKey);
@@ -31,13 +32,28 @@ const getReflection = async (reflectionId) => {
         where: {
           id: Number.parseInt(reflectionId),
         },
-        include: {
-          quote: {
-            include: {
-              book: true,
-            },
-          },
-        },
+       include: {
+  quote: {
+    include: {
+      book: true,
+    },
+  },
+
+  discussions: {
+    where: {
+      title: {
+        contains: normalizeSearch,
+        mode: "insensitive",
+      },
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+    include: {
+      messages: true,
+    },
+  },
+},
       });
     
   } catch (error) {

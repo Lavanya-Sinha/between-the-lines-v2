@@ -1,6 +1,7 @@
 import getDiscussion from "@/lib/discussions/getDiscussion";
 import DiscussionComposer from "@/app/components/DiscussionComposer";
 import EndDiscussionButton from "@/app/components/EndDiscussionButton";
+import DiscussionRealtime from "@/app/components/DIscussionRealTime";
 import Link from "next/link";
 
 const DiscussionPage = async ({ params }) => {
@@ -9,8 +10,10 @@ const DiscussionPage = async ({ params }) => {
   const discussion = await getDiscussion({ discussionId });
 
   return (
+    <DiscussionRealtime discussionId={discussion.id}>
     <div>
       <section>
+        <h1>Debug Title: {discussion.title ?? "NULL"}</h1>
        <Link href={`/book/${id}/quote/${quoteId}/reflection/${reflectionId}`}>← Back to Reflection</Link>
         <h2>{discussion.reflection.quote.book.title}</h2>
         <br />
@@ -41,6 +44,7 @@ const DiscussionPage = async ({ params }) => {
         </div>
       </section>
     </div>
+    </DiscussionRealtime>
   );
 };
 export default DiscussionPage;

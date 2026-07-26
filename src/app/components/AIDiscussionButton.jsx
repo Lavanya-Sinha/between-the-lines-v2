@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 const AIDiscussionButton = ({reflectionId})=>{
     const router = useRouter();
     const handleDiscussionSave = async()=>{
+        console.log("reflectionId:", reflectionId);
         const discussion = await startDiscussion({reflectionId})
         console.log(discussion);
         router.push(`/book/${discussion.reflection.quote.book.id}/quote/${discussion.reflection.quote.id}/reflection/${discussion.reflection_id}/discussions/${discussion.id}`)
