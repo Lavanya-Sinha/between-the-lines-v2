@@ -2,20 +2,24 @@
 
 import { useRouter } from "next/navigation";
 
-const ContinueDiscussionButton = ({ discussion }) => {
-  const router = useRouter();
+import Button from "@/app/components/ui/Button";
 
-  return (
-    <button
-      onClick={() =>
-        router.push(
-          `/book/${discussion.reflection.quote.book.id}/quote/${discussion.reflection.quote.id}/reflection/${discussion.reflection.id}/discussions/${discussion.id}`
-        )
-      }
-    >
-      Continue Discussion
-    </button>
-  );
+const ContinueDiscussionButton = ({
+    discussion,
+}) => {
+    const router = useRouter();
+
+    return (
+        <Button
+            onClick={() =>
+                router.push(
+                    `/book/${discussion.reflection.quote.book.id}/quote/${discussion.reflection.quote.id}/reflection/${discussion.reflection.id}/discussions/${discussion.id}`
+                )
+            }
+        >
+            Continue Discussion
+        </Button>
+    );
 };
 
 export default ContinueDiscussionButton;

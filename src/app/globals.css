@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
+
 :root {
-  --background: #000000;
-  --foreground: #000000;
+    --background: #f5efe6;
+    --foreground: #2c1810;
 }
+
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #000000;
-  }
+
+html {
+    scroll-behavior: smooth;
 }
+
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--background);
+    color: var(--text-primary);
+
+    font-family: var(--font-body);
+    line-height: var(--line-height-body);
+
+    transition:
+        background-color var(--motion-normal) var(--motion-easing-standard),
+        color var(--motion-normal) var(--motion-easing-standard);
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    line-height: var(--line-height-heading);
+    letter-spacing: var(--letter-spacing-heading);
+}
+
+
+p,
+label,
+input,
+textarea,
+button,
+select {
+    font-family: var(--font-body);
+}
+
+
+blockquote {
+    font-family: var(--font-quote);
+    line-height: var(--line-height-quote);
+}
+
+
+.handwriting {
+    font-family: var(--font-handwriting);
 }

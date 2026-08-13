@@ -43,6 +43,7 @@ const getProfile = async () => {
     displayName: user.display_name,
     email: user.email,
     provider: user.provider,
+    profilePicture: user.profile_picture,
 
     stats: {
       books,

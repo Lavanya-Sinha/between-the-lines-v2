@@ -71,7 +71,7 @@ const UpdateBook = async (FormData) => {
       file: "src/app/actions/Update.js",
       operation: "Update Book",
       message: "Book Updated.",
-      userId: user.id,
+      userId: currentBook.user_id,
     });
     
     redirect(`/book/${bookId}`);

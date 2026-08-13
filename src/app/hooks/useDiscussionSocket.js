@@ -1,45 +1,33 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { io } from "socket.io-client";
-import { useRouter } from "next/navigation";
 
-export function useDiscussionSocket(discussionId) {
-  const socketRef = useRef(null);
-  const previousDiscussionRef = useRef(null);
-  const router = useRouter();
-  //for the socket connect-disconnect lifecycle
-  useEffect(() => {
-    const socket = io();
-    socketRef.current = socket;
-    socket.on("connect", () => {
-      console.log("Connected: ", socket.id);
-    });
+import { useEffect } from "react";
+import { useSocket } from "../components/QuoteRealTImeProvider";
+import { EVENTS } from "@/lib/realtime/eventTypes";
 
-    socket.on("disconnect", () => {
-        console.log("Disconnected");
-      });
+export function useDiscussionSocket({ setMessages }) {
+    const socket = useSocket();
 
-      socket.on("discussion-message-created", () => {
-        router.refresh();
-    });
-    
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+    useEffect(() => {
+        function handleMessage(message) {
+            setMessages((prev) => {
+                if (prev.some((m) => m.id === message.id)) {
+                    return prev;
+                }
 
-  //for the room creation-distruction lifecycle
-   useEffect(() => {
-    const socket = socketRef.current;
+                return [...prev, message];
+            });
+        }
 
-    if (!socket || !discussionId) return;
+        socket.on(
+            EVENTS.DISCUSSION_MESSAGE_CREATED,
+            handleMessage
+        );
 
-    if (previousDiscussionRef.current) {
-      socket.emit("leave-discussion", previousDiscussionRef.current);
-    }
-
-    socket.emit("join-discussion", discussionId);
-
-    previousDiscussionRef.current = discussionId;
-  }, [discussionId]);
+        return () => {
+            socket.off(
+                EVENTS.DISCUSSION_MESSAGE_CREATED,
+                handleMessage
+            );
+        };
+    }, [socket, setMessages]);
 }

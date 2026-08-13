@@ -1,0 +1,28 @@
+:root {
+    --background: #f5efe6;
+
+    --surface: #fffaf2;
+    --surface-hover: #f2e9dc;
+    --surface-secondary: #ebe0d1;
+
+    --primary: #7b4b33;
+    --primary-foreground: #ffffff;
+
+    --secondary: #c89f72;
+    --secondary-foreground: #2c1810;
+
+    --accent: #d97745;
+    --accent-foreground: #ffffff;
+
+    --border: #d4c0a8;
+
+    --text-primary: #111111;
+    --text-secondary: #5e4636;
+    --text-muted: #8c7664;
+
+    --success: #4d7c59;
+    --warning: #d97745;
+    --danger: #b84a3a;
+
+    --highlight: #f4d58d;
+}

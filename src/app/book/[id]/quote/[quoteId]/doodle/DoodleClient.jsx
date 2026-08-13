@@ -1,168 +1,250 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+
 import CreateDoodle from "@/app/actions/CreateDoodle";
 import UpdateDoodle from "@/app/actions/UpdateDoodle";
-import { drawLine, replayCanvas } from "@/lib/canvas/replayCanvas";
 import DeleteDoodle from "@/app/actions/DeleteDoodle";
-import DoodleToolbar from "@/app/components/DoodleToolbar";
+
+import { drawLine, replayCanvas } from "@/lib/canvas/replayCanvas";
 import simplifyCanvas from "@/lib/canvas/simplifyCanvas";
 
+import DoodleToolbar from "@/app/components/DoodleToolbar";
+
+import Button from "@/app/components/ui/Button";
+import Card from "@/app/components/ui/Card";
+
 const DoodleClient = ({ doodle, quoteId, id }) => {
-  const canvasRef = useRef(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+    const canvasRef = useRef(null);
+    const ctxRef = useRef(null);
 
-  const canvasBackground = "black";
-  const [tool, setTool] = useState({
-    color: "white",
-    brushSize: 4,
-    mode: "draw",
-  });
+    const previousPointRef = useRef(null);
+    const strokeRef = useRef([]);
+    const redoRef = useRef([]);
 
-  //helper for clearing canvas
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    const ctx = ctxRef.current;
+    const [isDrawing, setIsDrawing] = useState(false);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  };
+    const canvasBackground = "black";
 
-  //undo
-  const redoRef = useRef([]);
-  const handleUndo = () => {
-    if (strokeRef.current.length === 0) return;
-    const lastStroke = strokeRef.current.pop();
-    redoRef.current.push(lastStroke);
-    clearCanvas();
-    replayCanvas(ctxRef.current, strokeRef.current, canvasBackground);
-  };
-
-  //redo
-  const handleRedo = () => {
-    if (redoRef.current.length === 0) return;
-    const lastRedoStroke = redoRef.current.pop();
-    strokeRef.current.push(lastRedoStroke);
-    clearCanvas();
-    replayCanvas(ctxRef.current, strokeRef.current, canvasBackground);
-  };
-  const previousPointRef = useRef(null);
-  const ctxRef = useRef(null);
-
-  const getMousePosition = (event) => {
-    const rect = canvasRef.current.getBoundingClientRect();
-    return {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-    };
-  };
-  const strokeRef = useRef([]);
-
-  const handleMouseDown = (event) => {
-    const point = getMousePosition(event);
-    setIsDrawing(true);
-    redoRef.current = [];
-    previousPointRef.current = point;
-    strokeRef.current.push({
-      color: tool.color,
-      brushSize: tool.brushSize,
-      mode: tool.mode,
-      points: [point],
+    const [tool, setTool] = useState({
+        color: "white",
+        brushSize: 4,
+        mode: "draw",
     });
-  };
 
-  const handleMouseMove = (event) => {
-    if (!isDrawing) return;
-    const currentPoint = getMousePosition(event);
+    const clearCanvas = () => {
+        const canvas = canvasRef.current;
+        const ctx = ctxRef.current;
 
-    ctxRef.current.strokeStyle =
-      tool.mode === "erase" ? canvasBackground : tool.color;
-    ctxRef.current.lineWidth = tool.brushSize;
-    drawLine(ctxRef.current, previousPointRef.current, currentPoint);
-    previousPointRef.current = currentPoint;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
 
-    const currentStroke = strokeRef.current[strokeRef.current.length - 1];
-    currentStroke.points.push(currentPoint);
-  };
+    const handleUndo = () => {
+        if (strokeRef.current.length === 0) {
+            return;
+        }
 
-  const handleMouseUp = () => {
-    setIsDrawing(false);
-    previousPointRef.current = null;
-    console.log(strokeRef.current);
-  };
+        const lastStroke = strokeRef.current.pop();
 
-  const handleCanvasClear = () => {
-    clearCanvas();
-    strokeRef.current = [];
-    redoRef.current = [];
-  };
+        redoRef.current.push(lastStroke);
 
-  
-  const handleCanvasSave = async () => {
-    const EPSILON = 0.5
-    const optimizedCanvas = simplifyCanvas(strokeRef.current, EPSILON)
+        clearCanvas();
 
- const originalSize = JSON.stringify(strokeRef.current).length;
-const optimizedSize = JSON.stringify(optimizedCanvas).length;
+        replayCanvas(
+            ctxRef.current,
+            strokeRef.current,
+            canvasBackground
+        );
+    };
 
-console.log("Original JSON:", originalSize);
-console.log("Optimized JSON:", optimizedSize);
-console.log(
-  `Reduction: ${(
-    ((originalSize - optimizedSize) / originalSize) *
-    100
-  ).toFixed(2)}%`
-);
+    const handleRedo = () => {
+        if (redoRef.current.length === 0) {
+            return;
+        }
 
-    if (doodle) {
-      await UpdateDoodle(doodle.id, optimizedCanvas);
-      return;
-    }
-    await CreateDoodle(quoteId, optimizedCanvas);
-  };
+        const lastRedoStroke = redoRef.current.pop();
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    ctxRef.current = canvas.getContext("2d");
-    ctxRef.current.lineWidth = tool.brushSize;
-    ctxRef.current.lineCap = "round";
-    ctxRef.current.strokeStyle = tool.color;
-    ctxRef.current.lineJoin = "round";
-    if (doodle) {
-      console.log(doodle.canvas_data);
-      strokeRef.current = doodle.canvas_data;
-      replayCanvas(ctxRef.current, doodle.canvas_data, canvasBackground);
-      console.log(strokeRef.current);
-    }
-  }, [doodle]);
+        strokeRef.current.push(lastRedoStroke);
 
-  return (
-    <main>
-      <DoodleToolbar
-        tool={tool}
-        setTool={setTool}
-        handleUndo={handleUndo}
-        handleRedo={handleRedo}
-        handleCanvasClear={handleCanvasClear}
-      />
+        clearCanvas();
 
-      <canvas
-        ref={canvasRef}
-        width={700}
-        height={500}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        style={{ border: "1px solid white", backgroundColor: canvasBackground }}
-      />
-      <button onClick={handleCanvasSave}>Save Doodle</button>
-      {doodle && (
-        <form action={DeleteDoodle}>
-          <input type="hidden" name="id" value={id} />
-          <input type="hidden" name="quoteId" value={quoteId} />
-          <button type="submit">Delete Doodle</button>
-        </form>
-      )}
-    </main>
-  );
+        replayCanvas(
+            ctxRef.current,
+            strokeRef.current,
+            canvasBackground
+        );
+    };
+
+    const getMousePosition = (event) => {
+        const rect = canvasRef.current.getBoundingClientRect();
+
+        return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+        };
+    };
+
+    const handleMouseDown = (event) => {
+        const point = getMousePosition(event);
+
+        setIsDrawing(true);
+
+        redoRef.current = [];
+
+        previousPointRef.current = point;
+
+        strokeRef.current.push({
+            color: tool.color,
+            brushSize: tool.brushSize,
+            mode: tool.mode,
+            points: [point],
+        });
+    };
+
+    const handleMouseMove = (event) => {
+        if (!isDrawing) {
+            return;
+        }
+
+        const currentPoint = getMousePosition(event);
+
+        ctxRef.current.strokeStyle =
+            tool.mode === "erase"
+                ? canvasBackground
+                : tool.color;
+
+        ctxRef.current.lineWidth = tool.brushSize;
+
+        drawLine(
+            ctxRef.current,
+            previousPointRef.current,
+            currentPoint
+        );
+
+        previousPointRef.current = currentPoint;
+
+        const currentStroke =
+            strokeRef.current[
+                strokeRef.current.length - 1
+            ];
+
+        currentStroke.points.push(currentPoint);
+    };
+
+    const handleMouseUp = () => {
+        setIsDrawing(false);
+
+        previousPointRef.current = null;
+    };
+
+    const handleCanvasClear = () => {
+        clearCanvas();
+
+        strokeRef.current = [];
+
+        redoRef.current = [];
+    };
+
+    const handleCanvasSave = async () => {
+        const EPSILON = 0.5;
+
+        const optimizedCanvas = simplifyCanvas(
+            strokeRef.current,
+            EPSILON
+        );
+
+        if (doodle) {
+            await UpdateDoodle(
+                doodle.id,
+                optimizedCanvas
+            );
+
+            return;
+        }
+
+        await CreateDoodle(
+            quoteId,
+            optimizedCanvas
+        );
+    };
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+
+        ctxRef.current = canvas.getContext("2d");
+
+        ctxRef.current.lineWidth = tool.brushSize;
+        ctxRef.current.lineCap = "round";
+        ctxRef.current.lineJoin = "round";
+        ctxRef.current.strokeStyle = tool.color;
+
+        if (doodle) {
+            strokeRef.current = doodle.canvas_data;
+
+            replayCanvas(
+                ctxRef.current,
+                doodle.canvas_data,
+                canvasBackground
+            );
+        }
+    }, [doodle]);
+
+    return (
+        <main className="flex flex-col gap-6">
+            <DoodleToolbar
+                tool={tool}
+                setTool={setTool}
+                handleUndo={handleUndo}
+                handleRedo={handleRedo}
+                handleCanvasClear={handleCanvasClear}
+            />
+
+            <Card className="overflow-hidden p-6">
+                <canvas
+                    ref={canvasRef}
+                    width={700}
+                    height={500}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    style={{
+                        border: "1px solid var(--border)",
+                        backgroundColor: canvasBackground,
+                        width: "100%",
+                        maxWidth: "700px",
+                        display: "block",
+                        margin: "0 auto",
+                    }}
+                />
+            </Card>
+
+            <div className="flex flex-wrap gap-4">
+                <Button onClick={handleCanvasSave}>
+                    Save Doodle
+                </Button>
+
+                {doodle && (
+                    <form action={DeleteDoodle}>
+                        <input
+                            type="hidden"
+                            name="id"
+                            value={id}
+                        />
+
+                        <input
+                            type="hidden"
+                            name="quoteId"
+                            value={quoteId}
+                        />
+
+                        <Button variant="danger">
+                            Delete Doodle
+                        </Button>
+                    </form>
+                )}
+            </div>
+        </main>
+    );
 };
+
 export default DoodleClient;

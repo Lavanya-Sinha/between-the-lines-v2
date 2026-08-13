@@ -9,13 +9,17 @@ import getDiscussion from "../discussions/getDiscussion";
 export async function buildDiscussionContext({ discussionId }) {
   // Fetch all required data
   const discussion = await getDiscussion({ discussionId });
-  const reflection = await getReflection(discussion.reflection_id);
-  const discussions = await getDiscussions({ reflectionId: discussion.reflection_id });
+  const reflection = await getReflection({
+    reflectionId: discussion.reflection_id,
+  });
+  const discussions = await getDiscussions({
+    reflectionId: discussion.reflection_id,
+  });
 
-  const activeDiscussion = discussion
+  const activeDiscussion = discussion;
   const previousDiscussion = discussions.find(
-  discussion => discussion.ended_at !== null
-);
+    (discussion) => discussion.ended_at !== null,
+  );
 
   // Build and return a normalized context object
   return {
@@ -36,10 +40,10 @@ export async function buildDiscussionContext({ discussionId }) {
       genres: reflection.quote.book.genres,
     },
 
-   activeDiscussion: normalizeDiscussions(activeDiscussion),
+    activeDiscussion: normalizeDiscussions(activeDiscussion),
 
-   previousDiscussion:  previousDiscussion
-    ? normalizeDiscussions(previousDiscussion)
-    : undefined,
+    previousDiscussion: previousDiscussion
+      ? normalizeDiscussions(previousDiscussion)
+      : undefined,
   };
 }

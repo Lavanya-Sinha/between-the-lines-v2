@@ -4,7 +4,7 @@ import getReflection from "../reflections/getReflection";
 export async function buildTitleContext({ discussionId }) {
   const discussion = await getDiscussion({ discussionId });
 
-  const reflection = await getReflection(discussion.reflection_id);
+  const reflection = await getReflection({reflectionId : discussion.reflection_id});
 
 return {
   reflection: {

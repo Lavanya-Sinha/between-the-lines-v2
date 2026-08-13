@@ -5,7 +5,7 @@ const requireUser = async()=>{
     
     const user = await getCurrentUser()
     if(!user){
-        redirect("./login")
+        redirect("/login")
     }
     return user
 

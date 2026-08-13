@@ -5,16 +5,25 @@ import companion from "@/lib/ai/companion";
 import getDiscussion from "@/lib/discussions/getDiscussion";
 import generateTitle from "@/lib/ai/generateTitle";
 import updateDiscussion from "@/lib/discussions/updateDiscussion";
-import { emitDiscussionMessageCreated } from "@/lib/socket-event";
+import { publishRealtimeEvent } from "@/lib/realtime/publisher";
+import { EVENTS } from "@/lib/realtime/eventTypes";
 
 const ContinueDiscussion = async({discussionId, message})=>{
+
+ const discussion = await getDiscussion({ discussionId });
+ const quoteId = discussion.reflection.quote.id;
+
 const userMessage = await addMessage({
     discussionId,
     role: "USER",
     content: message
  })
 
- emitDiscussionMessageCreated(userMessage)
+ await publishRealtimeEvent({
+    room: `quote-${quoteId}`,
+    type: EVENTS.DISCUSSION_MESSAGE_CREATED,
+    payload: userMessage,
+});
 
  const aiResponse = await companion({ discussionId })
 
@@ -24,9 +33,11 @@ const userMessage = await addMessage({
     content: aiResponse
  })
 
-emitDiscussionMessageCreated(assistantMessage)
-
- const discussion = await getDiscussion({ discussionId });
+await publishRealtimeEvent({
+    room: `quote-${quoteId}`,
+    type: EVENTS.DISCUSSION_MESSAGE_CREATED,
+    payload: assistantMessage,
+});
 
 if (!discussion.title) {
     const title = await generateTitle({ discussionId });
@@ -36,7 +47,6 @@ if (!discussion.title) {
        data: {title},
     });
 }
-
  return await getDiscussion({ discussionId })
 }
 export default ContinueDiscussion

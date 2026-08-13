@@ -2,7 +2,7 @@ import prisma from "../prisma";
 import redis from "../redis";
 import log from "../logging/logger";
 
-const getReflection = async ({reflectionId, searchDiscussion = ""}) => {
+const getReflection = async ({ reflectionId, searchDiscussion = "" }) => {
   const normalizeSearch = searchDiscussion.trim().toLowerCase();
   const cacheKey = `reflection:${reflectionId}:${normalizeSearch}`;
 
@@ -14,13 +14,13 @@ const getReflection = async ({reflectionId, searchDiscussion = ""}) => {
       return JSON.parse(cachedReflection);
     }
   } catch (error) {
-     log({
-    level: "WARN",
-    file: "src/lib/reflections/getReflection.js",
-    operation: "Redis GET",
-    message: "Failed to read reflection from cache.",
-    error: error.message,
-  });
+    log({
+      level: "WARN",
+      file: "src/lib/reflections/getReflection.js",
+      operation: "Redis GET",
+      message: "Failed to read reflection from cache.",
+      error: error.message,
+    });
   }
 
   console.log("Reflection Cache Miss");
@@ -28,58 +28,57 @@ const getReflection = async ({reflectionId, searchDiscussion = ""}) => {
   let reflection;
 
   try {
-       reflection = await prisma.reflections.findUnique({
-        where: {
-          id: Number.parseInt(reflectionId),
-        },
-       include: {
-  quote: {
-    include: {
-      book: true,
-    },
-  },
-
-  discussions: {
-    where: {
-      title: {
-        contains: normalizeSearch,
-        mode: "insensitive",
+    reflection = await prisma.reflections.findUnique({
+      where: {
+        id: Number.parseInt(reflectionId),
       },
-    },
-    orderBy: {
-      created_at: "desc",
-    },
-    include: {
-      messages: true,
-    },
-  },
-},
-      });
-    
-  } catch (error) {
-      log({
-        level:"ERROR",
-        file:"src/lib/reflections/getReflection.js",
-        operation:"Prisma Find Reflection",
-        message:"Failed to retrieve reflection from database.",
-        error:error.message
-    })
+      include: {
+        quote: {
+          include: {
+            book: true,
+          },
+        },
 
-    throw error
+        discussions: {
+          where: {
+            title: {
+              contains: normalizeSearch,
+              mode: "insensitive",
+            },
+          },
+          orderBy: {
+            created_at: "desc",
+          },
+          include: {
+            messages: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    log({
+      level: "ERROR",
+      file: "src/lib/reflections/getReflection.js",
+      operation: "Prisma Find Reflection",
+      message: "Failed to retrieve reflection from database.",
+      error: error.message,
+    });
+
+    throw error;
   }
 
-  const CACHE_TTL = 60 * 5;
+  const CACHE_TTL = 30;
 
   try {
     await redis.set(cacheKey, JSON.stringify(reflection), "EX", CACHE_TTL);
   } catch (error) {
     log({
-    level: "WARN",
-    file: "src/lib/reflections/getReflection.js",
-    operation: "Redis SET",
-    message: "Failed to cache reflection.",
-    error: error.message,
-  });
+      level: "WARN",
+      file: "src/lib/reflections/getReflection.js",
+      operation: "Redis SET",
+      message: "Failed to cache reflection.",
+      error: error.message,
+    });
   }
 
   return reflection;

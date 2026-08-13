@@ -6,10 +6,11 @@ import createDiscussion from "@/lib/discussions/createDiscussion"
 import getReflection from "@/lib/reflections/getReflection"
 import companion from "@/lib/ai/companion"
 import getActiveDiscussion from "@/lib/discussions/getActiveDiscussion"
-import { emitDiscussionMessageCreated } from "@/lib/socket-event"
+import { publishRealtimeEvent } from "@/lib/realtime/publisher";
+import { EVENTS } from "@/lib/realtime/eventTypes";
+
 
 const startDiscussion = async({reflectionId})=>{
-  console.log("Server reflectionId:", reflectionId);
 const existingDiscussion = await getActiveDiscussion({ reflectionId });
 
 if (existingDiscussion) {
@@ -20,6 +21,7 @@ if (existingDiscussion) {
 
 const reflection = await getReflection({reflectionId});
 const discussion = await createDiscussion({reflectionId})
+const quoteId = reflection.quote.id;
 
 const userMessage = await addMessage({
   discussionId: discussion.id,
@@ -27,7 +29,12 @@ const userMessage = await addMessage({
   content: reflection.content,
 });
 
-emitDiscussionMessageCreated(userMessage)
+ await publishRealtimeEvent({
+    room: `quote-${quoteId}`,
+    type: EVENTS.DISCUSSION_MESSAGE_CREATED,
+    payload: userMessage,
+});
+
 
 const aiResponse = await companion({
   discussionId: discussion.id
@@ -39,7 +46,11 @@ const assistantMessage = await addMessage({
   content: aiResponse,
 });
 
-emitDiscussionMessageCreated(assistantMessage)
+await publishRealtimeEvent({
+    room: `quote-${quoteId}`,
+    type: EVENTS.DISCUSSION_MESSAGE_CREATED,
+    payload: assistantMessage,
+});
 return await getDiscussion({discussionId: discussion.id});
 }
 export default startDiscussion

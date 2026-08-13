@@ -35,7 +35,7 @@ export async function POST(request) {
     }
 
     const payload = await verifyGoogleToken(body.credential);
-    const { email, displayName } = payload;
+    const { email, displayName, picture } = payload;
 
     let user = await prisma.users.findUnique({
       where: {
@@ -50,6 +50,16 @@ export async function POST(request) {
           email,
           password_hash: null,
           provider: "GOOGLE",
+          profile_picture: picture ?? null,
+        },
+      });
+    } else if (user.provider === "GOOGLE" && !user.profile_picture && picture) {
+      user = await prisma.users.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          profile_picture: picture,
         },
       });
     }

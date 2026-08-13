@@ -1,156 +1,589 @@
 import requireSearchAccess from "@/lib/auth/requireSearchAccess";
+
 import AddMoodTag from "@/app/actions/AddMoodTag";
-import Link from "next/link";
 import DeleteQuote from "@/app/actions/DeleteQuote";
 import RemoveMoodTag from "@/app/actions/RemoveMoodTag";
+
+import Link from "next/link";
+
 import DoodlePreview from "@/app/components/DoodlePreview";
 import AttachmentsClient from "./attachments/AttachmentsClient";
 import { AttachmentRenderer } from "@/app/components/AttachmentRenderer";
 import Search from "@/app/components/Search";
+
+import Button from "@/app/components/ui/Button";
+import Card from "@/app/components/ui/Card";
+import Divider from "@/app/components/ui/Divider";
+import Input from "@/app/components/ui/Input";
+
 import getQuote from "@/lib/quotes/getQuote";
 
 const QuotePage = async ({ params, searchParams }) => {
-  await requireSearchAccess();
+    await requireSearchAccess();
 
-  const searchContent = await searchParams;
-  const searchReflection = searchContent.search ?? "";
+    const searchContent = await searchParams;
+    const searchReflection =
+        searchContent.search ?? "";
 
-  const { id, quoteId } = await params;
-  const quote = await getQuote({quoteId, searchReflection})
+    const { id, quoteId } = await params;
 
-  if (!quote) {
-  return (
-    <main>
-      <h1>Quote not found.</h1>
-      <Link href={`/book/${id}`}>Back</Link>
-    </main>
-  );
-}
-  return (
-    <main>
-      <Link href={`/book/${id}`}>← Back to Book</Link>
+    const quote = await getQuote({
+        quoteId,
+        searchReflection,
+    });
 
-      <Search
-        action={`/book/${id}/quote/${quoteId}`}
-        placeholder="Search Your Reflections..."
-        queryName="search"
-        defaultValue={searchReflection}
-      />
+    if (!quote) {
+        return (
+            <main className="mx-auto flex min-h-screen max-w-4xl flex-col gap-6 p-8">
 
-      <blockquote>{quote.text}</blockquote>
+                <h1
+                    style={{
+                        fontFamily:
+                            "var(--font-heading)",
+                        fontSize:
+                            "var(--font-size-3xl)",
+                        fontWeight:
+                            "var(--font-weight-bold)",
+                        lineHeight:
+                            "var(--line-height-heading)",
+                        letterSpacing:
+                            "var(--letter-spacing-heading)",
+                    }}
+                >
+                    Quote not found.
+                </h1>
 
-      <br />
+                <Link
+                    href={`/book/${id}`}
+                    style={{
+                        fontFamily:
+                            "var(--font-body)",
+                        fontSize:
+                            "var(--font-size-base)",
+                        fontWeight:
+                            "var(--font-weight-medium)",
+                        lineHeight:
+                            "var(--line-height-body)",
+                    }}
+                >
+                    ← Back to book
+                </Link>
 
-      <Link href={`/book/${id}/quote/${quoteId}/edit-quote`}>Edit Quote</Link>
+            </main>
+        );
+    }
 
-      <form action={DeleteQuote}>
-        <input type="hidden" name="quote_id" value={quote.id} />
-        <input type="hidden" name="book_id" value={id} />
-        <button>Delete Quote</button>
-      </form>
+    return (
+        <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 p-8">
 
-      <hr />
+            <header className="flex flex-col gap-6">
 
-      <h2>Mood Tags</h2>
+                <Link
+                    href={`/book/${id}`}
+                    style={{
+                        fontFamily:
+                            "var(--font-body)",
+                        fontSize:
+                            "var(--font-size-base)",
+                        fontWeight:
+                            "var(--font-weight-medium)",
+                        lineHeight:
+                            "var(--line-height-body)",
+                    }}
+                >
+                    ← Back to Book
+                </Link>
 
-      <form action={AddMoodTag}>
-        <input type="text" name="tag_name" placeholder="Add mood tag..." />
-        <input type="hidden" name="quote_id" value={quote.id} />
-        <input type="hidden" name="book_id" value={id} />
-        <button>Add Tag</button>
-      </form>
+                <Search
+                    action={`/book/${id}/quote/${quoteId}`}
+                    placeholder="Search your reflections..."
+                    queryName="search"
+                    defaultValue={searchReflection}
+                />
 
-      <br />
+                <div className="flex flex-wrap gap-4">
 
-      {quote.mood_tags.map((tag) => (
-        <div key={tag.id}>
-          <p>{tag.name}</p>
+                    <Link
+                        href={`/book/${id}/quote/${quoteId}/edit-quote`}
+                    >
+                        <Button>
+                            Edit Quote
+                        </Button>
+                    </Link>
 
-          <form action={RemoveMoodTag}>
-            <input type="hidden" name="quote_id" value={quote.id} />
+                    <form action={DeleteQuote}>
 
-            <input type="hidden" name="tag_id" value={tag.id} />
+                        <input
+                            type="hidden"
+                            name="quote_id"
+                            value={quote.id}
+                        />
 
-            <input type="hidden" name="book_id" value={id} />
+                        <input
+                            type="hidden"
+                            name="book_id"
+                            value={id}
+                        />
 
-            <button>Remove</button>
-          </form>
-        </div>
-      ))}
+                        <Button variant="danger">
+                            Delete Quote
+                        </Button>
 
-      <hr />
+                    </form>
 
-      <h2>Doodle</h2>
+                </div>
 
-      {quote.doodle ? (
-        <Link href={`/book/${id}/quote/${quote.id}/doodle`}>
-          <DoodlePreview canvasData={quote.doodle.canvas_data} />
-        </Link>
-      ) : (
-        <>
-          <p>No doodle yet.</p>
+            </header>
 
-          <Link href={`/book/${id}/quote/${quote.id}/doodle`}>
-            Create Doodle
-          </Link>
-        </>
-      )}
+            {/* Quote */}
 
-      <hr />
+            <Card className="flex flex-col gap-6 p-8">
 
-      <h2>Attachments</h2>
+                <blockquote
+                    className="border-l-4 border-[var(--primary)] pl-6"
+                    style={{
+                        fontFamily:
+                            "var(--font-quote)",
 
-      <AttachmentsClient quoteId={quote.id} id={id} />
+                        fontSize:
+                            "var(--font-size-2xl)",
 
-      <br />
+                        fontWeight:
+                            "var(--font-weight-normal)",
 
-      {quote.attachments.length === 0 ? (
-        <>
-          <p>No attachments yet.</p>
-          <p>Attach images, PDFs, audio or videos.</p>
-        </>
-      ) : (
-        quote.attachments.map((attachment) => (
-          <AttachmentRenderer
-            key={attachment.id}
-            attachment={attachment}
-            quoteId={quote.id}
-            id={id}
-          />
-        ))
-      )}
+                        lineHeight:
+                            "var(--line-height-quote)",
 
-      <hr />
+                        color:
+                            "var(--text-primary)",
+                    }}
+                >
+                    {quote.text}
+                </blockquote>
 
-      <h2>Reflections</h2>
+            </Card>
 
-      <Link href={`/book/${id}/quote/${quoteId}/add-reflection`}>
-        <button>Add Reflection</button>
-      </Link>
+            <Divider />
 
-      <br />
+            {/* Mood Tags */}
 
-      {quote.reflections.length === 0 ? (
-        <>
-          <p>No reflections yet.</p>
-          <p>Write your thoughts about this quote.</p>
-        </>
-      ) : (
-        quote.reflections.map((reflection) => (
-          <div key={reflection.id}>
-            <Link
-              href={`/book/${id}/quote/${quoteId}/reflection/${reflection.id}`}
-            >
-              <p>{reflection.content}</p>
-            </Link>
+            <section className="flex flex-col gap-6">
 
-            <p>Created At: {new Date(reflection.created_at).toDateString()}</p>
+                <h2
+                    style={{
+                        fontFamily:
+                            "var(--font-heading)",
 
-            <br />
-          </div>
-        ))
-      )}
-    </main>
-  );
+                        fontSize:
+                            "var(--font-size-2xl)",
+
+                        fontWeight:
+                            "var(--font-weight-semibold)",
+
+                        lineHeight:
+                            "var(--line-height-heading)",
+
+                        letterSpacing:
+                            "var(--letter-spacing-heading)",
+                    }}
+                >
+                    Mood Tags
+                </h2>
+
+                <form
+                    action={AddMoodTag}
+                    className="flex flex-wrap gap-4"
+                >
+                    <Input
+                        type="text"
+                        name="tag_name"
+                        placeholder="Add mood tag..."
+                    />
+
+                    <input
+                        type="hidden"
+                        name="quote_id"
+                        value={quote.id}
+                    />
+
+                    <input
+                        type="hidden"
+                        name="book_id"
+                        value={id}
+                    />
+
+                    <Button>
+                        Add Tag
+                    </Button>
+                </form>
+
+                <div className="flex flex-wrap gap-4">
+
+                    {quote.mood_tags.map((tag) => (
+                        <Card
+                            key={tag.id}
+                            className="flex items-center gap-4 p-4"
+                        >
+                            <p
+                                style={{
+                                    fontFamily:
+                                        "var(--font-body)",
+
+                                    fontSize:
+                                        "var(--font-size-base)",
+
+                                    fontWeight:
+                                        "var(--font-weight-medium)",
+
+                                    lineHeight:
+                                        "var(--line-height-body)",
+                                }}
+                            >
+                                {tag.name}
+                            </p>
+
+                            <form action={RemoveMoodTag}>
+
+                                <input
+                                    type="hidden"
+                                    name="quote_id"
+                                    value={quote.id}
+                                />
+
+                                <input
+                                    type="hidden"
+                                    name="tag_id"
+                                    value={tag.id}
+                                />
+
+                                <input
+                                    type="hidden"
+                                    name="book_id"
+                                    value={id}
+                                />
+
+                                <Button variant="ghost">
+                                    Remove
+                                </Button>
+
+                            </form>
+
+                        </Card>
+                    ))}
+
+                </div>
+
+            </section>
+
+            <Divider />
+
+            {/* Doodle */}
+
+            <section className="flex flex-col gap-6">
+
+                <h2
+                    style={{
+                        fontFamily:
+                            "var(--font-heading)",
+
+                        fontSize:
+                            "var(--font-size-2xl)",
+
+                        fontWeight:
+                            "var(--font-weight-semibold)",
+
+                        lineHeight:
+                            "var(--line-height-heading)",
+
+                        letterSpacing:
+                            "var(--letter-spacing-heading)",
+                    }}
+                >
+                    Doodle
+                </h2>
+
+                {quote.doodle ? (
+
+                    <Link
+                        href={`/book/${id}/quote/${quote.id}/doodle`}
+                    >
+                        <DoodlePreview
+                            canvasData={
+                                quote.doodle.canvas_data
+                            }
+                        />
+                    </Link>
+
+                ) : (
+
+                    <Card className="flex flex-col gap-4">
+
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+                            }}
+                        >
+                            No doodle yet.
+                        </p>
+
+                        <Link
+                            href={`/book/${id}/quote/${quote.id}/doodle`}
+                        >
+                            <Button>
+                                Create Doodle
+                            </Button>
+                        </Link>
+
+                    </Card>
+
+                )}
+
+            </section>
+
+            <Divider />
+
+            {/* Attachments */}
+
+            <section className="flex flex-col gap-6">
+
+                <h2
+                    style={{
+                        fontFamily:
+                            "var(--font-heading)",
+
+                        fontSize:
+                            "var(--font-size-2xl)",
+
+                        fontWeight:
+                            "var(--font-weight-semibold)",
+
+                        lineHeight:
+                            "var(--line-height-heading)",
+
+                        letterSpacing:
+                            "var(--letter-spacing-heading)",
+                    }}
+                >
+                    Attachments
+                </h2>
+
+                <AttachmentsClient
+                    quoteId={quote.id}
+                    id={id}
+                />
+
+                {quote.attachments.length === 0 ? (
+
+                    <Card className="flex flex-col gap-4">
+
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+                            }}
+                        >
+                            No attachments yet.
+                        </p>
+
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            Attach images, PDFs,
+                            audio files, or videos.
+                        </p>
+
+                    </Card>
+
+                ) : (
+
+                    quote.attachments.map(
+                        (attachment) => (
+                            <AttachmentRenderer
+                                key={attachment.id}
+                                attachment={attachment}
+                                quoteId={quote.id}
+                                id={id}
+                            />
+                        )
+                    )
+
+                )}
+
+            </section>
+
+            <Divider />
+
+            {/* Reflections */}
+
+            <section className="flex flex-col gap-6">
+
+                <div className="flex flex-wrap items-center justify-between gap-4">
+
+                    <h2
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
+
+                            fontSize:
+                                "var(--font-size-2xl)",
+
+                            fontWeight:
+                                "var(--font-weight-semibold)",
+
+                            lineHeight:
+                                "var(--line-height-heading)",
+
+                            letterSpacing:
+                                "var(--letter-spacing-heading)",
+                        }}
+                    >
+                        Reflections
+                    </h2>
+
+                    <Link
+                        href={`/book/${id}/quote/${quoteId}/add-reflection`}
+                    >
+                        <Button>
+                            Add Reflection
+                        </Button>
+                    </Link>
+
+                </div>
+
+                {quote.reflections.length === 0 ? (
+
+                    <Card className="flex flex-col gap-4">
+
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                fontWeight:
+                                    "var(--font-weight-medium)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+                            }}
+                        >
+                            No reflections yet.
+                        </p>
+
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            Write your thoughts
+                            about this quote.
+                        </p>
+
+                    </Card>
+
+                ) : (
+
+                    quote.reflections.map(
+                        (reflection) => (
+                            <Card
+                                key={reflection.id}
+                                className="flex flex-col gap-4 p-6"
+                            >
+                                <Link
+                                    href={`/book/${id}/quote/${quoteId}/reflection/${reflection.id}`}
+                                >
+                                    <p
+                                        style={{
+                                            fontFamily:
+                                                "var(--font-body)",
+
+                                            fontSize:
+                                                "var(--font-size-lg)",
+
+                                            fontWeight:
+                                                "var(--font-weight-normal)",
+
+                                            lineHeight:
+                                                "var(--line-height-body)",
+
+                                            color:
+                                                "var(--text-primary)",
+                                        }}
+                                    >
+                                        {reflection.content}
+                                    </p>
+                                </Link>
+
+                                <p
+                                    style={{
+                                        fontFamily:
+                                            "var(--font-body)",
+
+                                        fontSize:
+                                            "var(--font-size-sm)",
+
+                                        fontWeight:
+                                            "var(--font-weight-normal)",
+
+                                        lineHeight:
+                                            "var(--line-height-body)",
+
+                                        color:
+                                            "var(--text-muted)",
+                                    }}
+                                >
+                                    {new Date(
+                                        reflection.created_at
+                                    ).toDateString()}
+                                </p>
+
+                            </Card>
+                        )
+                    )
+
+                )}
+
+            </section>
+
+        </main>
+    );
 };
+
 export default QuotePage;
