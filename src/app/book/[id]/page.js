@@ -8,11 +8,19 @@ import DeleteBook from "@/app/actions/Delete";
 import Search from "@/app/components/Search";
 import CloudinaryImage from "@/app/components/CloudinaryImage";
 
+import ThemeBackground from "@/app/components/themes/ThemeBackground";
+import ThemeAtmosphere from "@/app/components/themes/ThemeAtmosphere";
+import ThemeDecoratives from "@/app/components/themes/ThemeDecoratives";
+
+import EmptyState from "@/app/components/ui/EmptyStates";
 import Button from "@/app/components/ui/Button";
 import Card from "@/app/components/ui/Card";
 import Divider from "@/app/components/ui/Divider";
 
-const BookPage = async ({ params, searchParams }) => {
+const BookPage = async ({
+    params,
+    searchParams,
+}) => {
     await requireSearchAccess();
 
     const search = await searchParams;
@@ -27,304 +35,400 @@ const BookPage = async ({ params, searchParams }) => {
 
     if (!book) {
         return (
-            <main className="mx-auto flex min-h-screen max-w-4xl flex-col gap-6 p-8">
+            <ThemeBackground>
+                <ThemeAtmosphere />
 
-                <h1
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-                        fontSize:
-                            "var(--font-size-3xl)",
-                        fontWeight:
-                            "var(--font-weight-bold)",
-                        lineHeight:
-                            "var(--line-height-heading)",
-                        letterSpacing:
-                            "var(--letter-spacing-heading)",
-                    }}
+                <main
+                    className="
+                        relative
+                        z-10
+                        mx-auto
+                        flex
+                        min-h-screen
+                        max-w-4xl
+                        flex-col
+                        gap-6
+                        px-6
+                        py-8
+                        sm:px-8
+                    "
                 >
-                    Book not found
-                </h1>
-
-                <Link href="/dashboard">
-                    <Button variant="ghost">
-                        Back to bookshelf
-                    </Button>
-                </Link>
-
-            </main>
-        );
-    }
-
-    return (
-        <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-10 p-8">
-
-            <header className="flex flex-col gap-6">
-
-                <Link
-                    href="/dashboard"
-                    style={{
-                        fontFamily:
-                            "var(--font-body)",
-                        fontSize:
-                            "var(--font-size-base)",
-                        fontWeight:
-                            "var(--font-weight-medium)",
-                        lineHeight:
-                            "var(--line-height-body)",
-                    }}
-                >
-                    ← Back to bookshelf
-                </Link>
-
-                <Search
-                    action={`/book/${id}`}
-                    placeholder="Search your quotes..."
-                    queryName="search"
-                    defaultValue={searchText}
-                />
-
-                <div className="flex flex-wrap gap-4">
-
-                    <Link href={`/book/${id}/edit`}>
-                        <Button>
-                            Edit Book
-                        </Button>
-                    </Link>
-
-                    <form action={DeleteBook}>
-
-                        <input
-                            type="hidden"
-                            name="id"
-                            value={book.id}
-                        />
-
-                        <Button
-                            type="submit"
-                            variant="danger"
-                        >
-                            Delete Book
-                        </Button>
-
-                    </form>
-
-                </div>
-
-            </header>
-
-            <Card className="flex flex-col gap-8 p-8 md:flex-row">
-
-                {book.cover_img && (
-                    <CloudinaryImage
-                        src={book.cover_img}
-                        alt={`${book.title} cover`}
-                        width={250}
-                        height={375}
-                        sizes="(max-width: 768px) 200px, 250px"
-                    />
-                )}
-
-                <div className="flex flex-1 flex-col gap-4">
-
                     <h1
                         style={{
                             fontFamily:
                                 "var(--font-heading)",
+
                             fontSize:
                                 "var(--font-size-3xl)",
+
                             fontWeight:
                                 "var(--font-weight-bold)",
+
                             lineHeight:
                                 "var(--line-height-heading)",
+
                             letterSpacing:
                                 "var(--letter-spacing-heading)",
+
+                            color:
+                                "var(--text-primary)",
                         }}
                     >
-                        {book.title}
+                        Book not found
                     </h1>
 
-                    <p
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
-                            fontSize:
-                                "var(--font-size-base)",
-                            lineHeight:
-                                "var(--line-height-body)",
-                            color:
-                                "var(--text-secondary)",
-                        }}
-                    >
-                        <strong>Author:</strong>{" "}
-                        {book.author}
-                    </p>
-
-                    <p
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
-                            fontSize:
-                                "var(--font-size-base)",
-                            lineHeight:
-                                "var(--line-height-body)",
-                            color:
-                                "var(--text-secondary)",
-                        }}
-                    >
-                        <strong>Genres:</strong>{" "}
-                        {book.genres.join(" • ")}
-                    </p>
-
-                    <Divider />
-
-                    <div
-                        className="flex flex-col gap-2"
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
-                            fontSize:
-                                "var(--font-size-sm)",
-                            fontWeight:
-                                "var(--font-weight-normal)",
-                            lineHeight:
-                                "var(--line-height-body)",
-                            color:
-                                "var(--text-muted)",
-                        }}
-                    >
-                        <p>
-                            Added on{" "}
-                            {new Date(
-                                book.created_at
-                            ).toLocaleDateString()}
-                        </p>
-
-                        <p>
-                            Updated on{" "}
-                            {new Date(
-                                book.updated_at
-                            ).toLocaleDateString()}
-                        </p>
-                    </div>
-
-                </div>
-
-            </Card>
-
-            <section className="flex flex-col gap-6">
-
-                <div className="flex items-center justify-between">
-
-                    <h2
-                        style={{
-                            fontFamily:
-                                "var(--font-heading)",
-                            fontSize:
-                                "var(--font-size-2xl)",
-                            fontWeight:
-                                "var(--font-weight-semibold)",
-                            lineHeight:
-                                "var(--line-height-heading)",
-                            letterSpacing:
-                                "var(--letter-spacing-heading)",
-                        }}
-                    >
-                        Quotes ({book.quotes.length})
-                    </h2>
-
-                    <Link
-                        href={`/book/${book.id}/add-quotes`}
-                    >
-                        <Button>
-                            Add Quote
+                    <Link href="/dashboard">
+                        <Button variant="ghost">
+                            Back to bookshelf
                         </Button>
                     </Link>
+                </main>
+            </ThemeBackground>
+        );
+    }
 
-                </div>
+    return (
+        <ThemeBackground>
+            <ThemeAtmosphere />
 
-                {book.quotes.length === 0 ? (
+            <ThemeDecoratives />
 
-                    <Card className="flex flex-col gap-4">
+            <main
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-screen
+                    max-w-6xl
+                    flex-col
+                    gap-10
+                    px-6
+                    py-8
+                    sm:px-8
+                    lg:py-12
+                "
+            >
+                <header
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                    "
+                >
+                    <Link
+                        href="/dashboard"
+                        style={{
+                            fontFamily:
+                                "var(--font-body)",
 
-                        <p
+                            fontSize:
+                                "var(--font-size-base)",
+
+                            fontWeight:
+                                "var(--font-weight-medium)",
+
+                            lineHeight:
+                                "var(--line-height-body)",
+
+                            color:
+                                "var(--text-on-background)",
+                        }}
+                    >
+                        ← Back to bookshelf
+                    </Link>
+
+                    <Search
+                        placeholder="Search your quotes..."
+                        defaultValue={searchText}
+                    />
+
+                    <div
+                        className="
+                            flex
+                            flex-wrap
+                            gap-4
+                        "
+                    >
+                        <Link
+                            href={`/book/${id}/edit`}
+                        >
+                            <Button>
+                                Edit Book
+                            </Button>
+                        </Link>
+
+                        <form action={DeleteBook}>
+                            <input
+                                type="hidden"
+                                name="id"
+                                value={book.id}
+                            />
+
+                            <Button
+                                type="submit"
+                                variant="danger"
+                            >
+                                Delete Book
+                            </Button>
+                        </form>
+                    </div>
+                </header>
+
+                <Card
+                    className="
+                        flex
+                        flex-col
+                        gap-8
+                        p-6
+                        md:flex-row
+                        md:p-8
+                    "
+                >
+                    {book.cover_img && (
+                        <div
+                            className="
+                                flex
+                                shrink-0
+                                justify-center
+                                md:justify-start
+                            "
+                        >
+                            <CloudinaryImage
+                                src={book.cover_img}
+                                alt={`${book.title} cover`}
+                                width={250}
+                                height={375}
+                                sizes="
+                                    (max-width: 768px) 200px,
+                                    250px
+                                "
+                                className="
+                                    h-auto
+                                    max-w-full
+                                    rounded-lg
+                                    object-cover
+                                "
+                            />
+                        </div>
+                    )}
+
+                    <div
+                        className="
+                            flex
+                            flex-1
+                            flex-col
+                            gap-4
+                        "
+                    >
+                        <h1
                             style={{
                                 fontFamily:
-                                    "var(--font-body)",
+                                    "var(--font-heading)",
+
                                 fontSize:
-                                    "var(--font-size-base)",
+                                    "var(--font-size-3xl)",
+
                                 fontWeight:
-                                    "var(--font-weight-medium)",
+                                    "var(--font-weight-bold)",
+
                                 lineHeight:
-                                    "var(--line-height-body)",
+                                    "var(--line-height-heading)",
+
+                                letterSpacing:
+                                    "var(--letter-spacing-heading)",
+
+                                color:
+                                    "var(--text-primary)",
                             }}
                         >
-                            No quotes yet.
-                        </p>
+                            {book.title}
+                        </h1>
 
                         <p
                             style={{
                                 fontFamily:
                                     "var(--font-body)",
+
                                 fontSize:
                                     "var(--font-size-base)",
+
                                 lineHeight:
                                     "var(--line-height-body)",
+
                                 color:
                                     "var(--text-secondary)",
                             }}
                         >
-                            Start capturing memorable
-                            passages from this book.
+                            <strong>Author:</strong>{" "}
+                            {book.author}
                         </p>
+
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            <strong>Genres:</strong>{" "}
+                            {book.genres.join(" • ")}
+                        </p>
+
+                        <Divider />
+
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                gap-2
+                            "
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-sm)",
+
+                                fontWeight:
+                                    "var(--font-weight-normal)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-muted)",
+                            }}
+                        >
+                            <p>
+                                Added on{" "}
+                                {new Date(
+                                    book.created_at
+                                ).toLocaleDateString()}
+                            </p>
+
+                            <p>
+                                Updated on{" "}
+                                {new Date(
+                                    book.updated_at
+                                ).toLocaleDateString()}
+                            </p>
+                        </div>
+                    </div>
+                </Card>
+
+                <section
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                    "
+                >
+                    <div
+                        className="
+                            flex
+                            flex-wrap
+                            items-center
+                            justify-between
+                            gap-4
+                        "
+                    >
+                        <h2
+                            style={{
+                                fontFamily:
+                                    "var(--font-heading)",
+
+                                fontSize:
+                                    "var(--font-size-2xl)",
+
+                                fontWeight:
+                                    "var(--font-weight-semibold)",
+
+                                lineHeight:
+                                    "var(--line-height-heading)",
+
+                                letterSpacing:
+                                    "var(--letter-spacing-heading)",
+
+                                color:
+                                     "var(--text-on-background)",
+                            }}
+                        >
+                            Quotes ({book.quotes.length})
+                        </h2>
 
                         <Link
                             href={`/book/${book.id}/add-quotes`}
                         >
                             <Button>
-                                Add Your First Quote
+                                Add Quote
                             </Button>
                         </Link>
-
-                    </Card>
-
-                ) : (
-
-                    <div className="flex flex-col gap-4">
-
-                        {book.quotes.map((quote) => (
-
-                            <Card key={quote.id}>
-
-                                <Link
-                                    href={`/book/${book.id}/quote/${quote.id}`}
-                                    style={{
-                                        fontFamily:
-                                            "var(--font-quote)",
-                                        fontSize:
-                                            "var(--font-size-xl)",
-                                        fontWeight:
-                                            "var(--font-weight-normal)",
-                                        lineHeight:
-                                            "var(--line-height-quote)",
-                                        color:
-                                            "var(--text-primary)",
-                                    }}
-                                >
-                                    {quote.text}
-                                </Link>
-
-                            </Card>
-
-                        ))}
-
                     </div>
 
-                )}
+                    {book.quotes.length === 0 ? (
+                        <EmptyState
+                            type="quotes"
+                            action={
+                                <Link
+                                    href={`/book/${book.id}/add-quotes`}
+                                >
+                                    <Button>
+                                        Add Your First Quote
+                                    </Button>
+                                </Link>
+                            }
+                        />
+                    ) : (
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                gap-4
+                            "
+                        >
+                            {book.quotes.map(
+                                (quote) => (
+                                    <Card
+                                        key={quote.id}
+                                    >
+                                        <Link
+                                            href={`/book/${book.id}/quote/${quote.id}`}
+                                            style={{
+                                                fontFamily:
+                                                    "var(--font-quote)",
 
-            </section>
+                                                fontSize:
+                                                    "var(--font-size-xl)",
 
-        </main>
+                                                fontWeight:
+                                                    "var(--font-weight-normal)",
+
+                                                lineHeight:
+                                                    "var(--line-height-quote)",
+
+                                                color:
+                                                    "var(--text-primary)",
+                                            }}
+                                        >
+                                            {quote.text}
+                                        </Link>
+                                    </Card>
+                                )
+                            )}
+                        </div>
+                    )}
+                </section>
+            </main>
+        </ThemeBackground>
     );
 };
 

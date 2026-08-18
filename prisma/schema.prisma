@@ -20,6 +20,7 @@ model users {
   provider       AuthProvider   @default(EMAIL)
   profile_picture String?
   profile_picture_public_id String?
+  theme String @default("autumn")
   created_at    DateTime? @default(now())
   books         books[]
 }

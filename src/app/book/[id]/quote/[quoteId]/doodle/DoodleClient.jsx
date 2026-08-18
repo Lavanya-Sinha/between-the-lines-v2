@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import {
+    useEffect,
+    useState,
+    useRef,
+} from "react";
 
 import CreateDoodle from "@/app/actions/CreateDoodle";
 import UpdateDoodle from "@/app/actions/UpdateDoodle";
@@ -14,7 +18,11 @@ import DoodleToolbar from "@/app/components/DoodleToolbar";
 import Button from "@/app/components/ui/Button";
 import Card from "@/app/components/ui/Card";
 
-const DoodleClient = ({ doodle, quoteId, id }) => {
+const DoodleClient = ({
+    doodle,
+    quoteId,
+    id,
+}) => {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
 
@@ -22,7 +30,8 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
     const strokeRef = useRef([]);
     const redoRef = useRef([]);
 
-    const [isDrawing, setIsDrawing] = useState(false);
+    const [isDrawing, setIsDrawing] =
+        useState(false);
 
     const canvasBackground = "black";
 
@@ -36,7 +45,12 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
         const canvas = canvasRef.current;
         const ctx = ctxRef.current;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
     };
 
     const handleUndo = () => {
@@ -44,7 +58,8 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
             return;
         }
 
-        const lastStroke = strokeRef.current.pop();
+        const lastStroke =
+            strokeRef.current.pop();
 
         redoRef.current.push(lastStroke);
 
@@ -62,9 +77,12 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
             return;
         }
 
-        const lastRedoStroke = redoRef.current.pop();
+        const lastRedoStroke =
+            redoRef.current.pop();
 
-        strokeRef.current.push(lastRedoStroke);
+        strokeRef.current.push(
+            lastRedoStroke
+        );
 
         clearCanvas();
 
@@ -76,22 +94,30 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
     };
 
     const getMousePosition = (event) => {
-        const rect = canvasRef.current.getBoundingClientRect();
+        const rect =
+            canvasRef.current.getBoundingClientRect();
 
         return {
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top,
+            x:
+                event.clientX -
+                rect.left,
+
+            y:
+                event.clientY -
+                rect.top,
         };
     };
 
     const handleMouseDown = (event) => {
-        const point = getMousePosition(event);
+        const point =
+            getMousePosition(event);
 
         setIsDrawing(true);
 
         redoRef.current = [];
 
-        previousPointRef.current = point;
+        previousPointRef.current =
+            point;
 
         strokeRef.current.push({
             color: tool.color,
@@ -106,14 +132,16 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
             return;
         }
 
-        const currentPoint = getMousePosition(event);
+        const currentPoint =
+            getMousePosition(event);
 
         ctxRef.current.strokeStyle =
             tool.mode === "erase"
                 ? canvasBackground
                 : tool.color;
 
-        ctxRef.current.lineWidth = tool.brushSize;
+        ctxRef.current.lineWidth =
+            tool.brushSize;
 
         drawLine(
             ctxRef.current,
@@ -121,14 +149,17 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
             currentPoint
         );
 
-        previousPointRef.current = currentPoint;
+        previousPointRef.current =
+            currentPoint;
 
         const currentStroke =
             strokeRef.current[
                 strokeRef.current.length - 1
             ];
 
-        currentStroke.points.push(currentPoint);
+        currentStroke.points.push(
+            currentPoint
+        );
     };
 
     const handleMouseUp = () => {
@@ -141,17 +172,17 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
         clearCanvas();
 
         strokeRef.current = [];
-
         redoRef.current = [];
     };
 
     const handleCanvasSave = async () => {
         const EPSILON = 0.5;
 
-        const optimizedCanvas = simplifyCanvas(
-            strokeRef.current,
-            EPSILON
-        );
+        const optimizedCanvas =
+            simplifyCanvas(
+                strokeRef.current,
+                EPSILON
+            );
 
         if (doodle) {
             await UpdateDoodle(
@@ -171,15 +202,21 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
     useEffect(() => {
         const canvas = canvasRef.current;
 
-        ctxRef.current = canvas.getContext("2d");
+        ctxRef.current =
+            canvas.getContext("2d");
 
-        ctxRef.current.lineWidth = tool.brushSize;
+        ctxRef.current.lineWidth =
+            tool.brushSize;
+
         ctxRef.current.lineCap = "round";
         ctxRef.current.lineJoin = "round";
-        ctxRef.current.strokeStyle = tool.color;
+
+        ctxRef.current.strokeStyle =
+            tool.color;
 
         if (doodle) {
-            strokeRef.current = doodle.canvas_data;
+            strokeRef.current =
+                doodle.canvas_data;
 
             replayCanvas(
                 ctxRef.current,
@@ -190,41 +227,89 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
     }, [doodle]);
 
     return (
-        <main className="flex flex-col gap-6">
+        <div
+            className="
+                flex
+                flex-col
+                gap-6
+            "
+        >
             <DoodleToolbar
                 tool={tool}
                 setTool={setTool}
                 handleUndo={handleUndo}
                 handleRedo={handleRedo}
-                handleCanvasClear={handleCanvasClear}
+                handleCanvasClear={
+                    handleCanvasClear
+                }
             />
 
-            <Card className="overflow-hidden p-6">
-                <canvas
-                    ref={canvasRef}
-                    width={700}
-                    height={500}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                    style={{
-                        border: "1px solid var(--border)",
-                        backgroundColor: canvasBackground,
-                        width: "100%",
-                        maxWidth: "700px",
-                        display: "block",
-                        margin: "0 auto",
-                    }}
-                />
+            <Card
+                className="
+                    overflow-hidden
+                    p-3
+                    sm:p-6
+                "
+            >
+                <div
+                    className="
+                        flex
+                        justify-center
+                        overflow-auto
+                        rounded-lg
+                    "
+                >
+                    <canvas
+                        ref={canvasRef}
+                        width={700}
+                        height={500}
+                        onMouseDown={
+                            handleMouseDown
+                        }
+                        onMouseMove={
+                            handleMouseMove
+                        }
+                        onMouseUp={
+                            handleMouseUp
+                        }
+                        style={{
+                            border:
+                                "1px solid var(--border)",
+
+                            backgroundColor:
+                                canvasBackground,
+
+                            width: "100%",
+
+                            maxWidth: "700px",
+
+                            height: "auto",
+
+                            display: "block",
+                        }}
+                    />
+                </div>
             </Card>
 
-            <div className="flex flex-wrap gap-4">
-                <Button onClick={handleCanvasSave}>
+            <div
+                className="
+                    flex
+                    flex-wrap
+                    gap-4
+                "
+            >
+                <Button
+                    onClick={
+                        handleCanvasSave
+                    }
+                >
                     Save Doodle
                 </Button>
 
                 {doodle && (
-                    <form action={DeleteDoodle}>
+                    <form
+                        action={DeleteDoodle}
+                    >
                         <input
                             type="hidden"
                             name="id"
@@ -237,13 +322,16 @@ const DoodleClient = ({ doodle, quoteId, id }) => {
                             value={quoteId}
                         />
 
-                        <Button variant="danger">
+                        <Button
+                            variant="danger"
+                            type="submit"
+                        >
                             Delete Doodle
                         </Button>
                     </form>
                 )}
             </div>
-        </main>
+        </div>
     );
 };
 

@@ -5,6 +5,9 @@ import prisma from "@/lib/prisma";
 
 import UpdateReflection from "@/app/actions/UpdateReflection";
 
+import ThemeBackground from "@/app/components/themes/ThemeBackground";
+import ThemeAtmosphere from "@/app/components/themes/ThemeAtmosphere";
+
 import Button from "@/app/components/ui/Button";
 import Card from "@/app/components/ui/Card";
 import Divider from "@/app/components/ui/Divider";
@@ -35,155 +38,248 @@ const EditReflectionPage = async ({ params }) => {
             },
         });
 
-    return (
-        <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 p-8">
+    if (!reflection) {
+        return (
+            <ThemeBackground>
+                <ThemeAtmosphere />
 
-            <Link
-                href={`/book/${id}/quote/${quoteId}/reflection/${reflectionId}`}
-                style={{
-                    fontFamily:
-                        "var(--font-body)",
-                    fontSize:
-                        "var(--font-size-base)",
-                    fontWeight:
-                        "var(--font-weight-medium)",
-                    lineHeight:
-                        "var(--line-height-body)",
-                }}
-            >
-                ← Back to Reflection
-            </Link>
-
-            <Card className="flex flex-col gap-2 p-6">
-
-                <h2
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-                        fontSize:
-                            "var(--font-size-2xl)",
-                        fontWeight:
-                            "var(--font-weight-semibold)",
-                        lineHeight:
-                            "var(--line-height-heading)",
-                    }}
+                <main
+                    className="
+                        relative
+                        z-10
+                        p-8
+                    "
                 >
-                    {reflection.quote.book.title}
-                </h2>
-
-                <p
-                    style={{
-                        fontFamily:
-                            "var(--font-body)",
-                        fontSize:
-                            "var(--font-size-base)",
-                        lineHeight:
-                            "var(--line-height-body)",
-                        color:
-                            "var(--text-muted)",
-                    }}
-                >
-                    {reflection.quote.book.author}
-                </p>
-
-            </Card>
-
-            <Card className="flex flex-col gap-6 p-8">
-
-                <div className="flex flex-col gap-2">
-
                     <h1
                         style={{
                             fontFamily:
                                 "var(--font-heading)",
+
                             fontSize:
                                 "var(--font-size-3xl)",
+
                             fontWeight:
                                 "var(--font-weight-bold)",
+
                             lineHeight:
                                 "var(--line-height-heading)",
-                            letterSpacing:
-                                "var(--letter-spacing-heading)",
+
+                            color:
+                               "var(--text-on-background)",
                         }}
                     >
-                        Edit Reflection
+                        Reflection not found.
                     </h1>
+                </main>
+            </ThemeBackground>
+        );
+    }
+
+    return (
+        <ThemeBackground>
+            <ThemeAtmosphere />
+
+            <main
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-screen
+                    max-w-6xl
+                    flex-col
+                    gap-8
+                    px-6
+                    py-8
+                    sm:px-8
+                    lg:py-12
+                "
+            >
+                <Link
+                    href={`/book/${id}/quote/${quoteId}/reflection/${reflectionId}`}
+                    style={{
+                        fontFamily:
+                            "var(--font-body)",
+
+                        fontSize:
+                            "var(--font-size-base)",
+
+                        fontWeight:
+                            "var(--font-weight-medium)",
+
+                        lineHeight:
+                            "var(--line-height-body)",
+
+                        color:
+                           "var(--text-on-background)",
+                    }}
+                >
+                    ← Back to Reflection
+                </Link>
+
+                <Card
+                    className="
+                        flex
+                        flex-col
+                        gap-2
+                        p-6
+                    "
+                >
+                    <h2
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
+
+                            fontSize:
+                                "var(--font-size-2xl)",
+
+                            fontWeight:
+                                "var(--font-weight-semibold)",
+
+                            lineHeight:
+                                "var(--line-height-heading)",
+
+                            color:
+                                "var(--text-primary)",
+                        }}
+                    >
+                        {reflection.quote.book.title}
+                    </h2>
 
                     <p
                         style={{
                             fontFamily:
                                 "var(--font-body)",
+
                             fontSize:
                                 "var(--font-size-base)",
+
                             lineHeight:
                                 "var(--line-height-body)",
+
                             color:
-                                "var(--text-secondary)",
+                                "var(--text-muted)",
                         }}
                     >
-                        Revisit your thoughts and refine
-                        them whenever you wish.
+                        {reflection.quote.book.author}
                     </p>
+                </Card>
 
-                </div>
-
-                <Divider />
-
-                <form
-                    action={UpdateReflection}
-                    className="flex flex-col gap-6"
+                <Card
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                        p-6
+                        sm:p-8
+                    "
                 >
+                    <div className="flex flex-col gap-2">
+                        <h1
+                            style={{
+                                fontFamily:
+                                    "var(--font-heading)",
 
-                    <Textarea
-                        name="content"
-                        defaultValue={
-                            reflection.content
-                        }
-                        rows={10}
-                        className="min-h-72"
-                        style={{
-                            fontFamily:
-                                "var(--font-handwriting)",
-                            fontSize:
-                                "var(--font-size-xl)",
-                            lineHeight:
-                                "var(--line-height-body)",
-                        }}
-                    />
+                                fontSize:
+                                    "var(--font-size-3xl)",
 
-                    <input
-                        type="hidden"
-                        name="reflection_id"
-                        value={reflection.id}
-                    />
+                                fontWeight:
+                                    "var(--font-weight-bold)",
 
-                    <input
-                        type="hidden"
-                        name="quote_id"
-                        value={
-                            reflection.quote_id
-                        }
-                    />
+                                lineHeight:
+                                    "var(--line-height-heading)",
 
-                    <input
-                        type="hidden"
-                        name="book_id"
-                        value={id}
-                    />
+                                letterSpacing:
+                                    "var(--letter-spacing-heading)",
 
-                    <div className="self-start">
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Edit Reflection
+                        </h1>
 
-                        <Button>
-                            Save Reflection
-                        </Button>
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
 
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            Revisit your thoughts and refine
+                            them whenever you wish.
+                        </p>
                     </div>
 
-                </form>
+                    <Divider />
 
-            </Card>
+                    <form
+                        action={UpdateReflection}
+                        className="
+                            flex
+                            flex-col
+                            gap-6
+                        "
+                    >
+                        <Textarea
+                            name="content"
+                            defaultValue={
+                                reflection.content
+                            }
+                            rows={10}
+                            className="min-h-72"
+                            style={{
+                                fontFamily:
+                                    "var(--font-handwriting)",
 
-        </main>
+                                fontSize:
+                                    "var(--font-size-xl)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        />
+
+                        <input
+                            type="hidden"
+                            name="reflection_id"
+                            value={reflection.id}
+                        />
+
+                        <input
+                            type="hidden"
+                            name="quote_id"
+                            value={
+                                reflection.quote_id
+                            }
+                        />
+
+                        <input
+                            type="hidden"
+                            name="book_id"
+                            value={id}
+                        />
+
+                        <div className="self-start">
+                            <Button type="submit">
+                                Save Reflection
+                            </Button>
+                        </div>
+                    </form>
+                </Card>
+            </main>
+        </ThemeBackground>
     );
 };
 

@@ -1,15 +1,19 @@
-import ProfilePictureMenu from "../components/profile/ProfilePictureMenu";
 import Link from "next/link";
 
+import ProfilePictureMenu from "../components/profile/ProfilePictureMenu";
+import ThemeSelector from "../components/ThemeSelector";
+
+import ThemeBackground from "../components/themes/ThemeBackground";
+import ThemeAtmosphere from "../components/themes/ThemeAtmosphere";
+
 import getProfile from "@/lib/profile/getProfile";
+import { getInitials } from "@/lib/initials/getInitials";
 
 import Logout from "../actions/Logout";
+
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Divider from "../components/ui/Divider";
-import ThemeSelector from "../components/ThemeSelector";
-
-import { getInitials } from "@/lib/initials/getInitials";
 
 const ProfilePage = async () => {
     const profile = await getProfile();
@@ -19,51 +23,33 @@ const ProfilePage = async () => {
     );
 
     return (
-        <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 p-8">
+        <ThemeBackground className="min-h-screen overflow-hidden">
+            <ThemeAtmosphere
+                className="
+                    pointer-events-none
+                    fixed
+                    inset-0
+                    z-0
+                    opacity-15
+                "
+            />
 
-            <Link
-                href="/dashboard"
-                style={{
-                    fontFamily:
-                        "var(--font-body)",
-
-                    fontSize:
-                        "var(--font-size-base)",
-
-                    fontWeight:
-                        "var(--font-weight-medium)",
-
-                    lineHeight:
-                        "var(--line-height-body)",
-                }}
+            <main
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-screen
+                    max-w-5xl
+                    flex-col
+                    gap-8
+                    p-6
+                    sm:p-8
+                "
             >
-                ← Back to Dashboard
-            </Link>
-
-            <header className="flex flex-col gap-2">
-
-                <h1
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-
-                        fontSize:
-                            "var(--font-size-3xl)",
-
-                        fontWeight:
-                            "var(--font-weight-bold)",
-
-                        lineHeight:
-                            "var(--line-height-heading)",
-
-                        letterSpacing:
-                            "var(--letter-spacing-heading)",
-                    }}
-                >
-                    My Profile
-                </h1>
-
-                <p
+                <Link
+                    href="/dashboard"
                     style={{
                         fontFamily:
                             "var(--font-body)",
@@ -72,257 +58,354 @@ const ProfilePage = async () => {
                             "var(--font-size-base)",
 
                         fontWeight:
-                            "var(--font-weight-normal)",
+                            "var(--font-weight-medium)",
 
                         lineHeight:
                             "var(--line-height-body)",
 
                         color:
-                            "var(--textMuted)",
+                            "var(--primary)",
                     }}
                 >
-                    Your reading journey, all in one place.
-                </p>
+                    ← Back to Dashboard
+                </Link>
 
-            </header>
+                <header className="flex flex-col gap-2">
+                    <h1
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
 
-            <Card className="flex flex-col gap-6 p-8">
+                            fontSize:
+                                "var(--font-size-3xl)",
 
-                <div className="flex items-center gap-6">
+                            fontWeight:
+                                "var(--font-weight-bold)",
 
-                    <ProfilePictureMenu
-                        profilePicture={
-                            profile.profilePicture
-                        }
-                        displayName={
-                            profile.displayName
-                        }
-                        initials={initials}
-                    />
+                            lineHeight:
+                                "var(--line-height-heading)",
 
-                    <div className="flex flex-col gap-1">
+                            letterSpacing:
+                                "var(--letter-spacing-heading)",
 
-                        <h2
-                            style={{
-                                fontFamily:
-                                    "var(--font-heading)",
+                            color:
+                                "var(--text-primary)",
+                        }}
+                    >
+                        My Profile
+                    </h1>
 
-                                fontSize:
-                                    "var(--font-size-2xl)",
+                    <p
+                        style={{
+                            fontFamily:
+                                "var(--font-body)",
 
-                                fontWeight:
-                                    "var(--font-weight-bold)",
+                            fontSize:
+                                "var(--font-size-base)",
 
-                                lineHeight:
-                                    "var(--line-height-heading)",
-                            }}
+                            fontWeight:
+                                "var(--font-weight-normal)",
+
+                            lineHeight:
+                                "var(--line-height-body)",
+
+                            color:
+                                "var(--text-muted)",
+                        }}
+                    >
+                        Your reading journey, all in
+                        one place.
+                    </p>
+                </header>
+
+                <Card
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                        p-6
+                        sm:p-8
+                    "
+                >
+                    <div
+                        className="
+                            flex
+                            flex-col
+                            items-start
+                            gap-6
+                            sm:flex-row
+                            sm:items-center
+                        "
+                    >
+                        <ProfilePictureMenu
+                            profilePicture={
+                                profile.profilePicture
+                            }
+                            displayName={
+                                profile.displayName
+                            }
+                            initials={initials}
+                        />
+
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                gap-1
+                            "
                         >
-                            {profile.displayName}
-                        </h2>
+                            <h2
+                                style={{
+                                    fontFamily:
+                                        "var(--font-heading)",
 
-                        <p
-                            style={{
-                                fontFamily:
-                                    "var(--font-body)",
+                                    fontSize:
+                                        "var(--font-size-2xl)",
 
-                                fontSize:
-                                    "var(--font-size-base)",
+                                    fontWeight:
+                                        "var(--font-weight-bold)",
 
-                                fontWeight:
-                                    "var(--font-weight-normal)",
+                                    lineHeight:
+                                        "var(--line-height-heading)",
 
-                                lineHeight:
-                                    "var(--line-height-body)",
+                                    color:
+                                        "var(--text-primary)",
+                                }}
+                            >
+                                {profile.displayName}
+                            </h2>
 
-                                color:
-                                    "var(--textMuted)",
-                            }}
-                        >
-                            {profile.email}
-                        </p>
+                            <p
+                                style={{
+                                    fontFamily:
+                                        "var(--font-body)",
 
-                        <p
-                            style={{
-                                fontFamily:
-                                    "var(--font-body)",
+                                    fontSize:
+                                        "var(--font-size-base)",
 
-                                fontSize:
-                                    "var(--font-size-sm)",
+                                    fontWeight:
+                                        "var(--font-weight-normal)",
 
-                                fontWeight:
-                                    "var(--font-weight-normal)",
+                                    lineHeight:
+                                        "var(--line-height-body)",
 
-                                lineHeight:
-                                    "var(--line-height-body)",
+                                    color:
+                                        "var(--text-muted)",
+                                }}
+                            >
+                                {profile.email}
+                            </p>
 
-                                color:
-                                    "var(--textMuted)",
-                            }}
-                        >
-                            Signed in with{" "}
-                            {profile.provider === "GOOGLE"
-                                ? "Google"
-                                : "Email & Password"}
-                        </p>
+                            <p
+                                style={{
+                                    fontFamily:
+                                        "var(--font-body)",
 
+                                    fontSize:
+                                        "var(--font-size-sm)",
+
+                                    fontWeight:
+                                        "var(--font-weight-normal)",
+
+                                    lineHeight:
+                                        "var(--line-height-body)",
+
+                                    color:
+                                        "var(--text-muted)",
+                                }}
+                            >
+                                Signed in with{" "}
+                                {profile.provider ===
+                                "GOOGLE"
+                                    ? "Google"
+                                    : "Email & Password"}
+                            </p>
+                        </div>
                     </div>
+                </Card>
 
-                </div>
-
-            </Card>
-
-            <Card className="flex flex-col gap-6 p-8">
-
-                <h2
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-
-                        fontSize:
-                            "var(--font-size-2xl)",
-
-                        fontWeight:
-                            "var(--font-weight-bold)",
-
-                        lineHeight:
-                            "var(--line-height-heading)",
-                    }}
+                <Card
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                        p-6
+                        sm:p-8
+                    "
                 >
-                    Reading Statistics
-                </h2>
+                    <h2
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
 
-                <Divider />
+                            fontSize:
+                                "var(--font-size-2xl)",
 
-                <div className="grid gap-4 md:grid-cols-2">
+                            fontWeight:
+                                "var(--font-weight-bold)",
 
-                    <Card className="p-4">
-                        <span
-                            style={{
-                                fontFamily:
-                                    "var(--font-body)",
+                            lineHeight:
+                                "var(--line-height-heading)",
 
-                                fontSize:
-                                    "var(--font-size-base)",
+                            color:
+                                "var(--text-primary)",
+                        }}
+                    >
+                        Reading Statistics
+                    </h2>
 
-                                fontWeight:
-                                    "var(--font-weight-medium)",
+                    <Divider />
 
-                                lineHeight:
-                                    "var(--line-height-body)",
-                            }}
-                        >
-                            📚 Books:{" "}
-                            {profile.stats.books}
-                        </span>
-                    </Card>
+                    <div
+                        className="
+                            grid
+                            gap-4
+                            sm:grid-cols-2
+                        "
+                    >
+                        <Card className="p-4">
+                            <span
+                                style={{
+                                    fontFamily:
+                                        "var(--font-body)",
 
-                    <Card className="p-4">
-                        <span
-                            style={{
-                                fontFamily:
-                                    "var(--font-body)",
+                                    fontSize:
+                                        "var(--font-size-base)",
 
-                                fontSize:
-                                    "var(--font-size-base)",
+                                    fontWeight:
+                                        "var(--font-weight-medium)",
 
-                                fontWeight:
-                                    "var(--font-weight-medium)",
+                                    lineHeight:
+                                        "var(--line-height-body)",
 
-                                lineHeight:
-                                    "var(--line-height-body)",
-                            }}
-                        >
-                            💬 Quotes:{" "}
-                            {profile.stats.quotes}
-                        </span>
-                    </Card>
+                                    color:
+                                        "var(--text-primary)",
+                                }}
+                            >
+                                📚 Books:{" "}
+                                {profile.stats.books}
+                            </span>
+                        </Card>
 
-                    <Card className="p-4">
-                        <span
-                            style={{
-                                fontFamily:
-                                    "var(--font-body)",
+                        <Card className="p-4">
+                            <span
+                                style={{
+                                    fontFamily:
+                                        "var(--font-body)",
 
-                                fontSize:
-                                    "var(--font-size-base)",
+                                    fontSize:
+                                        "var(--font-size-base)",
 
-                                fontWeight:
-                                    "var(--font-weight-medium)",
+                                    fontWeight:
+                                        "var(--font-weight-medium)",
 
-                                lineHeight:
-                                    "var(--line-height-body)",
-                            }}
-                        >
-                            ✍️ Reflections:{" "}
-                            {profile.stats.reflections}
-                        </span>
-                    </Card>
+                                    lineHeight:
+                                        "var(--line-height-body)",
 
-                    <Card className="p-4">
-                        <span
-                            style={{
-                                fontFamily:
-                                    "var(--font-body)",
+                                    color:
+                                        "var(--text-primary)",
+                                }}
+                            >
+                                💬 Quotes:{" "}
+                                {profile.stats.quotes}
+                            </span>
+                        </Card>
 
-                                fontSize:
-                                    "var(--font-size-base)",
+                        <Card className="p-4">
+                            <span
+                                style={{
+                                    fontFamily:
+                                        "var(--font-body)",
 
-                                fontWeight:
-                                    "var(--font-weight-medium)",
+                                    fontSize:
+                                        "var(--font-size-base)",
 
-                                lineHeight:
-                                    "var(--line-height-body)",
-                            }}
-                        >
-                            🎨 Doodles:{" "}
-                            {profile.stats.doodles}
-                        </span>
-                    </Card>
+                                    fontWeight:
+                                        "var(--font-weight-medium)",
 
-                </div>
+                                    lineHeight:
+                                        "var(--line-height-body)",
 
-            </Card>
+                                    color:
+                                        "var(--text-primary)",
+                                }}
+                            >
+                                ✍️ Reflections:{" "}
+                                {profile.stats.reflections}
+                            </span>
+                        </Card>
 
-            <Card className="flex flex-col gap-6 p-8">
+                        <Card className="p-4">
+                            <span
+                                style={{
+                                    fontFamily:
+                                        "var(--font-body)",
 
-                <h2
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
+                                    fontSize:
+                                        "var(--font-size-base)",
 
-                        fontSize:
-                            "var(--font-size-2xl)",
+                                    fontWeight:
+                                        "var(--font-weight-medium)",
 
-                        fontWeight:
-                            "var(--font-weight-bold)",
+                                    lineHeight:
+                                        "var(--line-height-body)",
 
-                        lineHeight:
-                            "var(--line-height-heading)",
-                    }}
+                                    color:
+                                        "var(--text-primary)",
+                                }}
+                            >
+                                🎨 Doodles:{" "}
+                                {profile.stats.doodles}
+                            </span>
+                        </Card>
+                    </div>
+                </Card>
+
+                <Card
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                        p-6
+                        sm:p-8
+                    "
                 >
-                    Appearance
-                </h2>
+                    <h2
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
 
-                <Divider />
+                            fontSize:
+                                "var(--font-size-2xl)",
 
-                <ThemeSelector />
+                            fontWeight:
+                                "var(--font-weight-bold)",
 
-            </Card>
+                            lineHeight:
+                                "var(--line-height-heading)",
 
-            <form action={Logout}>
-                <div className="self-start">
+                            color:
+                                "var(--text-primary)",
+                        }}
+                    >
+                        Appearance
+                    </h2>
 
+                    <Divider />
+
+                    <ThemeSelector />
+                </Card>
+
+                <form action={Logout}>
                     <Button
                         variant="danger"
                         type="submit"
                     >
                         Log Out
                     </Button>
-
-                </div>
-            </form>
-
-        </main>
+                </form>
+            </main>
+        </ThemeBackground>
     );
 };
 

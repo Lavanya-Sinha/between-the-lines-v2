@@ -25,20 +25,32 @@ export default function ProfileButton({
                 transition-all
             "
             style={{
-                backgroundColor: "var(--surface)",
-                border: "1px solid var(--border)",
-                color: "var(--text-primary)",
+                backgroundColor:
+                    "var(--surface)",
 
-                fontFamily: "var(--font-body)",
-                fontWeight: "var(--font-weight-semibold)",
+                border:
+                    "var(--border-subtle) solid var(--border)",
 
-                boxShadow: "var(--shadow-sm)",
+                color:
+                    "var(--text-primary)",
+
+                fontFamily:
+                    "var(--font-body)",
+
+                fontSize:
+                    "var(--font-size-base)",
+
+                fontWeight:
+                    "var(--font-weight-semibold)",
+
+                boxShadow:
+                    "var(--shadow-button)",
 
                 transitionDuration:
                     "var(--motion-fast)",
 
                 transitionTimingFunction:
-                    "var(--motion-easing)",
+                    "var(--motion-easing-standard)",
             }}
         >
             {profilePicture ? (

@@ -6,9 +6,15 @@ import getDashboard from "@/lib/books/getDashboard";
 import Logout from "../actions/Logout";
 
 import Search from "../components/Search";
+import EmptyState from "../components/ui/EmptyStates";
+
+import ThemeBackground from "../components/themes/ThemeBackground";
+import ThemeAtmosphere from "../components/themes/ThemeAtmosphere";
+import ThemeDecoratives from "../components/themes/ThemeDecoratives";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import CloudinaryImage from "../components/CloudinaryImage";
 
 export default async function Dashboard({
     searchParams,
@@ -16,7 +22,6 @@ export default async function Dashboard({
     const user = await requireSearchAccess();
 
     const params = await searchParams;
-
     const search = params.search ?? "";
 
     const books = await getDashboard({
@@ -25,106 +30,59 @@ export default async function Dashboard({
     });
 
     return (
-        <main className="mx-auto flex min-h-screen max-w-7xl flex-col gap-10 p-8">
+        <ThemeBackground>
+            <ThemeAtmosphere />
 
-            <header className="flex flex-col gap-6">
+            <ThemeDecoratives />
 
-                <div className="flex flex-col gap-2">
-
-                    <h1
-                        style={{
-                            fontFamily:
-                                "var(--font-heading)",
-
-                            fontSize:
-                                "var(--font-size-3xl)",
-
-                            fontWeight:
-                                "var(--font-weight-bold)",
-
-                            lineHeight:
-                                "var(--line-height-heading)",
-
-                            letterSpacing:
-                                "var(--letter-spacing-heading)",
-                        }}
-                    >
-                        Welcome back, {user.display_name}!
-                    </h1>
-
-                    <p
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
-
-                            fontSize:
-                                "var(--font-size-lg)",
-
-                            fontWeight:
-                                "var(--font-weight-normal)",
-
-                            lineHeight:
-                                "var(--line-height-body)",
-
-                            color:
-                                "var(--text-secondary)",
-                        }}
-                    >
-                        Your personal library.
-                    </p>
-
-                </div>
-
-                <Search
-                    action="/dashboard"
-                    placeholder="Search your books..."
-                    queryName="search"
-                    defaultValue={search}
-                />
-
-                <div className="flex flex-wrap gap-4">
-
-                    <Link href="/add-book">
-                        <Button>
-                            + Add Book
-                        </Button>
-                    </Link>
-
-                    <form action={Logout}>
-                        <Button
-                            type="submit"
-                            variant="ghost"
-                        >
-                            Log Out
-                        </Button>
-                    </form>
-
-                </div>
-
-            </header>
-
-            <section className="grid gap-8 md:grid-cols-2">
-
-                {books.length === 0 && (
-                    <Card>
-
-                        <h2
+            <main
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-screen
+                    max-w-7xl
+                    flex-col
+                    gap-10
+                    px-6
+                    py-8
+                    sm:px-8
+                    lg:py-12
+                "
+            >
+                <header
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                    "
+                >
+                    <div className="flex flex-col gap-2">
+                        <h1
                             style={{
                                 fontFamily:
                                     "var(--font-heading)",
 
                                 fontSize:
-                                    "var(--font-size-xl)",
+                                    "var(--font-size-3xl)",
 
                                 fontWeight:
-                                    "var(--font-weight-semibold)",
+                                    "var(--font-weight-bold)",
 
                                 lineHeight:
                                     "var(--line-height-heading)",
+
+                                letterSpacing:
+                                    "var(--letter-spacing-heading)",
+
+                                color:
+                                    "var(--text-on-background)",
                             }}
                         >
-                            Your bookshelf is empty.
-                        </h2>
+                            Welcome back,{" "}
+                            {user.display_name}!
+                        </h1>
 
                         <p
                             style={{
@@ -132,147 +90,157 @@ export default async function Dashboard({
                                     "var(--font-body)",
 
                                 fontSize:
-                                    "var(--font-size-base)",
+                                    "var(--font-size-lg)",
+
+                                fontWeight:
+                                    "var(--font-weight-normal)",
 
                                 lineHeight:
                                     "var(--line-height-body)",
 
                                 color:
-                                    "var(--text-secondary)",
+                                    "var(--text-on-background-secondary)",
                             }}
                         >
-                            Add your first book to begin
-                            your journey.
+                            Your personal library.
                         </p>
+                    </div>
 
-                    </Card>
-                )}
+                    <Search
+                        placeholder="Search your books..."
+                        defaultValue={search}
+                    />
 
-                {books.map((book) => (
-                    <Card
-                        key={book.id}
-                        className="overflow-hidden p-6"
+                    <div
+                        className="
+                            flex
+                            flex-wrap
+                            gap-4
+                        "
                     >
-
-                        <Link
-                            href={`/book/${book.id}`}
-                            className="flex gap-6"
-                        >
-
-                            {book.cover_img && (
-                                <img
-                                    src={book.cover_img}
-                                    alt={`${book.title} cover`}
-                                    className="h-56 w-40 rounded-lg object-cover"
-                                />
-                            )}
-
-                            <div className="flex flex-1 flex-col gap-3">
-
-                                <h2
-                                    style={{
-                                        fontFamily:
-                                            "var(--font-heading)",
-
-                                        fontSize:
-                                            "var(--font-size-2xl)",
-
-                                        fontWeight:
-                                            "var(--font-weight-semibold)",
-
-                                        lineHeight:
-                                            "var(--line-height-heading)",
-                                    }}
-                                >
-                                    {book.title}
-                                </h2>
-
-                                <p
-                                    style={{
-                                        fontFamily:
-                                            "var(--font-body)",
-
-                                        fontSize:
-                                            "var(--font-size-base)",
-
-                                        fontWeight:
-                                            "var(--font-weight-medium)",
-
-                                        lineHeight:
-                                            "var(--line-height-body)",
-
-                                        color:
-                                            "var(--text-secondary)",
-                                    }}
-                                >
-                                    {book.author}
-                                </p>
-
-                                <p
-                                    style={{
-                                        fontFamily:
-                                            "var(--font-body)",
-
-                                        fontSize:
-                                            "var(--font-size-sm)",
-
-                                        fontWeight:
-                                            "var(--font-weight-normal)",
-
-                                        lineHeight:
-                                            "var(--line-height-body)",
-
-                                        color:
-                                            "var(--text-muted)",
-                                    }}
-                                >
-                                    {book.genres.join(" • ")}
-                                </p>
-
-                                <div
-                                    className="mt-auto flex flex-col gap-1"
-                                    style={{
-                                        fontFamily:
-                                            "var(--font-body)",
-
-                                        fontSize:
-                                            "var(--font-size-sm)",
-
-                                        fontWeight:
-                                            "var(--font-weight-normal)",
-
-                                        lineHeight:
-                                            "var(--line-height-body)",
-
-                                        color:
-                                            "var(--text-muted)",
-                                    }}
-                                >
-                                    <p>
-                                        Added on{" "}
-                                        {new Date(
-                                            book.created_at
-                                        ).toLocaleDateString()}
-                                    </p>
-
-                                    <p>
-                                        Updated on{" "}
-                                        {new Date(
-                                            book.updated_at
-                                        ).toLocaleDateString()}
-                                    </p>
-
-                                </div>
-
-                            </div>
-
+                        <Link href="/add-book">
+                            <Button>
+                                + Add Book
+                            </Button>
                         </Link>
 
-                    </Card>
-                ))}
+                        <form action={Logout}>
+                            <Button
+                                type="submit"
+                                variant="ghostBackground"
+                            >
+                                Log Out
+                            </Button>
+                        </form>
+                    </div>
+                </header>
 
-            </section>
+                {books.length === 0 ? (
+                    <EmptyState
+                        type="books"
+                        description="Your library is empty. Add your first book to begin."
+                    />
+                ) : (
+                    <section
+                        className="
+                            grid
+                            gap-6
+                            sm:grid-cols-2
+                            lg:grid-cols-3
+                        "
+                    >
+                        {books.map((book) => (
+                            <Link
+                                key={book.id}
+                                href={`/book/${book.id}`}
+                            >
+                                <Card
+                                    className="
+                                        h-full
+                                        transition-transform
+                                        hover:-translate-y-1
+                                    "
+                                >
+                                    <div
+                                        className="
+                                            flex
+                                            h-full
+                                            flex-col
+                                            gap-4
+                                        "
+                                    >
+                                        {book.cover_img && (
+                                            <div
+                                                className="
+                                                    relative
+                                                    aspect-[3/4]
+                                                    overflow-hidden
+                                                    rounded-lg
+                                                "
+                                            >
+                                                <CloudinaryImage
+                                                    src={
+                                                        book.cover_img
+                                                    }
+                                                    alt={
+                                                        book.title
+                                                    }
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                        )}
 
-        </main>
+                                        <div className="flex flex-col gap-1">
+                                            <h2
+                                                style={{
+                                                    fontFamily:
+                                                        "var(--font-heading)",
+
+                                                    fontSize:
+                                                        "var(--font-size-xl)",
+
+                                                    fontWeight:
+                                                        "var(--font-weight-semibold)",
+
+                                                    lineHeight:
+                                                        "var(--line-height-heading)",
+
+                                                    color:
+                                                        "var(--text-primary)",
+                                                }}
+                                            >
+                                                {book.title}
+                                            </h2>
+
+                                            <p
+                                                style={{
+                                                    fontFamily:
+                                                        "var(--font-body)",
+
+                                                    fontSize:
+                                                        "var(--font-size-sm)",
+
+                                                    fontWeight:
+                                                        "var(--font-weight-normal)",
+
+                                                    lineHeight:
+                                                        "var(--line-height-body)",
+
+                                                    color:
+                                                        "var(--text-secondary)",
+                                                }}
+                                            >
+                                                {book.author}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Card>
+                            </Link>
+                        ))}
+                    </section>
+                )}
+            </main>
+        </ThemeBackground>
     );
 }

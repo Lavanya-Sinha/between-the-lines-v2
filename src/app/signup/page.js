@@ -4,6 +4,9 @@ import SignUp from "../actions/SignUp";
 import PasswordInput from "../components/PasswordInput";
 import GoogleSignIn from "../components/GoogleSignIn";
 
+import ThemeBackground from "../components/themes/ThemeBackground";
+import ThemeAtmosphere from "../components/themes/ThemeAtmosphere";
+
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
@@ -11,196 +14,238 @@ import Divider from "../components/ui/Divider";
 
 const SignUpUser = () => {
     return (
-        <main className="flex min-h-screen items-center justify-center p-8">
+        <ThemeBackground className="min-h-screen overflow-hidden">
+            <ThemeAtmosphere
+                className="
+                    pointer-events-none
+                    absolute
+                    inset-0
+                    z-0
+                    opacity-20
+                "
+            />
 
-            <Card className="flex w-full max-w-xl flex-col gap-6">
-
-                <div className="flex flex-col gap-2">
-
-                    <h1
-                        style={{
-                            fontFamily:
-                                "var(--font-heading)",
-
-                            fontSize:
-                                "var(--font-size-3xl)",
-
-                            fontWeight:
-                                "var(--font-weight-bold)",
-
-                            lineHeight:
-                                "var(--line-height-heading)",
-
-                            letterSpacing:
-                                "var(--letter-spacing-heading)",
-                        }}
-                    >
-                        Create an account
-                    </h1>
-
-                    <p
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
-
-                            fontSize:
-                                "var(--font-size-base)",
-
-                            fontWeight:
-                                "var(--font-weight-regular)",
-
-                            lineHeight:
-                                "var(--line-height-body)",
-
-                            color:
-                                "var(--text-secondary)",
-                        }}
-                    >
-                        Begin building your own
-                        personal library.
-                    </p>
-
-                </div>
-
-                <form
-                    action={SignUp}
-                    className="flex flex-col gap-4"
+            <main
+                className="
+                    relative
+                    z-10
+                    flex
+                    min-h-screen
+                    items-center
+                    justify-center
+                    p-6
+                    sm:p-8
+                "
+            >
+                <Card
+                    className="
+                        flex
+                        w-full
+                        max-w-xl
+                        flex-col
+                        gap-6
+                    "
                 >
+                    <div className="flex flex-col gap-2">
+                        <h1
+                            style={{
+                                fontFamily:
+                                    "var(--font-heading)",
 
-                    <label
-                        htmlFor="display_name"
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
+                                fontSize:
+                                    "var(--font-size-3xl)",
 
-                            fontSize:
-                                "var(--font-size-sm)",
+                                fontWeight:
+                                    "var(--font-weight-bold)",
 
-                            fontWeight:
-                                "var(--font-weight-semibold)",
+                                lineHeight:
+                                    "var(--line-height-heading)",
 
-                            color:
-                                "var(--text-primary)",
-                        }}
+                                letterSpacing:
+                                    "var(--letter-spacing-heading)",
+
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Create an account
+                        </h1>
+
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                fontWeight:
+                                    "var(--font-weight-regular)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            Begin building your own
+                            personal library.
+                        </p>
+                    </div>
+
+                    <form
+                        action={SignUp}
+                        className="
+                            flex
+                            flex-col
+                            gap-4
+                        "
                     >
-                        Display name
-                    </label>
+                        <label
+                            htmlFor="display_name"
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
 
-                    <Input
-                        id="display_name"
-                        type="text"
-                        name="display_name"
-                        placeholder="Enter your display name"
-                    />
+                                fontSize:
+                                    "var(--font-size-sm)",
 
-                    <label
-                        htmlFor="email"
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
+                                fontWeight:
+                                    "var(--font-weight-semibold)",
 
-                            fontSize:
-                                "var(--font-size-sm)",
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Display name
+                        </label>
 
-                            fontWeight:
-                                "var(--font-weight-semibold)",
+                        <Input
+                            id="display_name"
+                            type="text"
+                            name="display_name"
+                            placeholder="Enter your display name"
+                        />
 
-                            color:
-                                "var(--text-primary)",
-                        }}
+                        <label
+                            htmlFor="email"
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-sm)",
+
+                                fontWeight:
+                                    "var(--font-weight-semibold)",
+
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Email
+                        </label>
+
+                        <Input
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="Enter your email"
+                        />
+
+                        <label
+                            htmlFor="password"
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-sm)",
+
+                                fontWeight:
+                                    "var(--font-weight-semibold)",
+
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Password
+                        </label>
+
+                        <PasswordInput
+                            name="password"
+                            placeholder="Create a password"
+                        />
+
+                        <label
+                            htmlFor="confirm_password"
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-sm)",
+
+                                fontWeight:
+                                    "var(--font-weight-semibold)",
+
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Confirm password
+                        </label>
+
+                        <PasswordInput
+                            name="confirm_password"
+                            placeholder="Confirm your password"
+                        />
+
+                        <Button type="submit">
+                            Create account
+                        </Button>
+                    </form>
+
+                    <Divider />
+
+                    <GoogleSignIn />
+
+                    <div
+                        className="
+                            flex
+                            flex-wrap
+                            items-center
+                            gap-2
+                        "
                     >
-                        Email
-                    </label>
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
 
-                    <Input
-                        id="email"
-                        type="email"
-                        name="email"
-                        placeholder="Enter your email"
-                    />
+                                fontSize:
+                                    "var(--font-size-base)",
 
-                    <label
-                        htmlFor="password"
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
+                                lineHeight:
+                                    "var(--line-height-body)",
 
-                            fontSize:
-                                "var(--font-size-sm)",
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            Already have an account?
+                        </p>
 
-                            fontWeight:
-                                "var(--font-weight-semibold)",
-
-                            color:
-                                "var(--text-primary)",
-                        }}
-                    >
-                        Password
-                    </label>
-
-                    <PasswordInput
-                        name="password"
-                        placeholder="Create a password"
-                    />
-
-                    <label
-                        htmlFor="confirm_password"
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
-
-                            fontSize:
-                                "var(--font-size-sm)",
-
-                            fontWeight:
-                                "var(--font-weight-semibold)",
-
-                            color:
-                                "var(--text-primary)",
-                        }}
-                    >
-                        Confirm password
-                    </label>
-
-                    <PasswordInput
-                        name="confirm_password"
-                        placeholder="Confirm your password"
-                    />
-
-                    <Button type="submit">
-                        Create account
-                    </Button>
-
-                </form>
-
-                <Divider />
-
-                <GoogleSignIn />
-
-                <p
-                    style={{
-                        fontFamily:
-                            "var(--font-body)",
-
-                        fontSize:
-                            "var(--font-size-base)",
-
-                        lineHeight:
-                            "var(--line-height-body)",
-                    }}
-                >
-                    Already have an account?
-                </p>
-
-                <Link href="/login">
-                    <Button variant="ghost">
-                        Log in
-                    </Button>
-                </Link>
-
-            </Card>
-
-        </main>
+                        <Link href="/login">
+                            <Button variant="ghost">
+                                Log in
+                            </Button>
+                        </Link>
+                    </div>
+                </Card>
+            </main>
+        </ThemeBackground>
     );
 };
 

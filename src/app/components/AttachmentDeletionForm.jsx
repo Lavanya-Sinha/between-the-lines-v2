@@ -27,7 +27,10 @@ const AttachmentDeletionForm = ({
                 value={id}
             />
 
-            <Button variant="danger">
+            <Button
+                type="submit"
+                variant="danger"
+            >
                 Delete attachment
             </Button>
         </form>

@@ -1,5 +1,7 @@
 "use client";
 
+import Spinner from "../Spinner";
+
 const variants = {
     primary: {
         backgroundColor: "var(--primary)",
@@ -13,12 +15,17 @@ const variants = {
 
     danger: {
         backgroundColor: "var(--danger)",
-        color: "var(--primary-foreground)",
+        color: "white",
     },
 
     ghost: {
         backgroundColor: "transparent",
         color: "var(--text-primary)",
+    },
+
+    ghostBackground: {
+        backgroundColor: "transparent",
+        color: "var(--text-on-background)",
     },
 };
 
@@ -27,27 +34,24 @@ export default function Button({
     variant = "primary",
     className = "",
     type = "button",
+    loading = false,
+    disabled = false,
     ...props
 }) {
+    const isDisabled = loading || disabled;
+
     return (
         <button
             type={type}
-            className={`
-                border
-                px-4
-                py-3
-                cursor-pointer
-                select-none
-                transition-all
-                hover:scale-[var(--scale-hover)]
-                active:scale-[var(--scale-pressed)]
-                ${className}
-            `}
+            disabled={isDisabled}
+            aria-busy={loading}
+            className={`inline-flex items-center justify-center gap-2 border px-4 py-3 cursor-pointer select-none transition-all disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
             style={{
                 ...variants[variant],
 
                 borderColor:
-                    variant === "ghost"
+                    variant === "ghost" ||
+                    variant === "ghostBackground"
                         ? "var(--border)"
                         : variants[variant]
                               .backgroundColor,
@@ -67,11 +71,18 @@ export default function Button({
                 boxShadow:
                     "var(--shadow-button)",
 
-                transition:
-                    "var(--transition-button)",
+                transitionDuration:
+                    "var(--motion-fast)",
+
+                transitionTimingFunction:
+                    "var(--motion-easing-standard)",
             }}
             {...props}
         >
+            {loading && (
+                <Spinner size="18px" />
+            )}
+
             {children}
         </button>
     );

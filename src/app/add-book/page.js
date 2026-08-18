@@ -4,6 +4,9 @@ import requireUser from "@/lib/auth/requireUser";
 
 import CreateBook from "../actions/Create";
 
+import ThemeBackground from "../components/themes/ThemeBackground";
+import ThemeAtmosphere from "../components/themes/ThemeAtmosphere";
+
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
@@ -12,144 +15,224 @@ const AddBookPage = async () => {
     await requireUser();
 
     const labelStyle = {
-        fontFamily: "var(--font-body)",
-        fontSize: "var(--font-size-sm)",
-        fontWeight: "var(--font-weight-semibold)",
-        lineHeight: "var(--line-height-body)",
-        color: "var(--text-primary)",
+        fontFamily:
+            "var(--font-body)",
+
+        fontSize:
+            "var(--font-size-sm)",
+
+        fontWeight:
+            "var(--font-weight-semibold)",
+
+        lineHeight:
+            "var(--line-height-body)",
+
+        color:
+            "var(--text-primary)",
     };
 
     return (
-        <main className="mx-auto flex min-h-screen max-w-4xl flex-col gap-8 p-8">
+        <ThemeBackground>
+            <ThemeAtmosphere />
 
-            <Link
-                href="/dashboard"
-                style={{
-                    fontFamily:
-                        "var(--font-body)",
-                    fontSize:
-                        "var(--font-size-base)",
-                    fontWeight:
-                        "var(--font-weight-medium)",
-                    lineHeight:
-                        "var(--line-height-body)",
-                }}
+            <main
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-screen
+                    max-w-4xl
+                    flex-col
+                    gap-8
+                    px-6
+                    py-8
+                    sm:px-8
+                    lg:py-12
+                "
             >
-                ← Back to Bookshelf
-            </Link>
-
-            <div className="flex flex-col gap-2">
-
-                <h1
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-                        fontSize:
-                            "var(--font-size-3xl)",
-                        fontWeight:
-                            "var(--font-weight-bold)",
-                        lineHeight:
-                            "var(--line-height-heading)",
-                        letterSpacing:
-                            "var(--letter-spacing-heading)",
-                    }}
-                >
-                    📚 Add a Book
-                </h1>
-
-                <p
+                <Link
+                    href="/dashboard"
                     style={{
                         fontFamily:
                             "var(--font-body)",
+
                         fontSize:
                             "var(--font-size-base)",
+
                         fontWeight:
-                            "var(--font-weight-normal)",
+                            "var(--font-weight-medium)",
+
                         lineHeight:
                             "var(--line-height-body)",
+
                         color:
-                            "var(--text-secondary)",
+                            "var(--text-on-background)",
                     }}
                 >
-                    Start building your personal bookshelf.
-                </p>
+                    ← Back to Bookshelf
+                </Link>
 
-            </div>
-
-            <Card className="p-8">
-
-                <form
-                    action={CreateBook}
-                    className="flex flex-col gap-6"
+                <header
+                    className="
+                        flex
+                        flex-col
+                        gap-2
+                    "
                 >
+                    <h1
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
 
-                    <div className="flex flex-col gap-2">
+                            fontSize:
+                                "var(--font-size-3xl)",
 
-                        <label style={labelStyle}>
-                            Book Title
-                        </label>
+                            fontWeight:
+                                "var(--font-weight-bold)",
 
-                        <Input
-                            type="text"
-                            name="title"
-                            placeholder="The Midnight Library"
-                            autoComplete="off"
-                        />
+                            lineHeight:
+                                "var(--line-height-heading)",
 
-                    </div>
+                            letterSpacing:
+                                "var(--letter-spacing-heading)",
 
-                    <div className="flex flex-col gap-2">
+                            color:
+                                "var(--text-on-background)",
+                        }}
+                    >
+                        Add a Book
+                    </h1>
 
-                        <label style={labelStyle}>
-                            Author Name
-                        </label>
+                    <p
+                        style={{
+                            fontFamily:
+                                "var(--font-body)",
 
-                        <Input
-                            type="text"
-                            name="author"
-                            placeholder="Matt Haig"
-                            autoComplete="off"
-                        />
+                            fontSize:
+                                "var(--font-size-base)",
 
-                    </div>
+                            fontWeight:
+                                "var(--font-weight-normal)",
 
-                    <div className="flex flex-col gap-2">
+                            lineHeight:
+                                "var(--line-height-body)",
 
-                        <label style={labelStyle}>
-                            Genres
-                        </label>
+                            color:
+                               "var(--text-on-background)",
+                        }}
+                    >
+                        Start building your personal
+                        bookshelf.
+                    </p>
+                </header>
 
-                        <Input
-                            type="text"
-                            name="genres"
-                            placeholder="Fantasy, Fiction, Philosophy"
-                        />
+                <Card className="p-6 sm:p-8">
+                    <form
+                        action={CreateBook}
+                        className="
+                            flex
+                            flex-col
+                            gap-6
+                        "
+                    >
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                gap-2
+                            "
+                        >
+                            <label
+                                htmlFor="title"
+                                style={labelStyle}
+                            >
+                                Book Title
+                            </label>
 
-                    </div>
+                            <Input
+                                id="title"
+                                type="text"
+                                name="title"
+                                placeholder="The Midnight Library"
+                                autoComplete="off"
+                            />
+                        </div>
 
-                    <div className="flex flex-col gap-2">
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                gap-2
+                            "
+                        >
+                            <label
+                                htmlFor="author"
+                                style={labelStyle}
+                            >
+                                Author Name
+                            </label>
 
-                        <label style={labelStyle}>
-                            Cover Image
-                        </label>
+                            <Input
+                                id="author"
+                                type="text"
+                                name="author"
+                                placeholder="Matt Haig"
+                                autoComplete="off"
+                            />
+                        </div>
 
-                        <Input
-                            type="file"
-                            name="book_cover"
-                            accept="image/*"
-                        />
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                gap-2
+                            "
+                        >
+                            <label
+                                htmlFor="genres"
+                                style={labelStyle}
+                            >
+                                Genres
+                            </label>
 
-                    </div>
+                            <Input
+                                id="genres"
+                                type="text"
+                                name="genres"
+                                placeholder="Fantasy, Fiction, Philosophy"
+                            />
+                        </div>
 
-                    <Button type="submit">
-                        Add Book
-                    </Button>
+                        <div
+                            className="
+                                flex
+                                flex-col
+                                gap-2
+                            "
+                        >
+                            <label
+                                htmlFor="book_cover"
+                                style={labelStyle}
+                            >
+                                Cover Image
+                            </label>
 
-                </form>
+                            <Input
+                                id="book_cover"
+                                type="file"
+                                name="book_cover"
+                                accept="image/*"
+                            />
+                        </div>
 
-            </Card>
-
-        </main>
+                        <Button type="submit">
+                            Add Book
+                        </Button>
+                    </form>
+                </Card>
+            </main>
+        </ThemeBackground>
     );
 };
 

@@ -11,15 +11,29 @@ export default function Logo() {
                 transition-all
             "
             style={{
-                color: "var(--text-primary)",
+                color:
+                    "var(--text-primary)",
 
-                fontFamily: "var(--font-title)",
-                fontSize: "var(--font-size-2xl)",
-                fontWeight: "var(--font-weight-bold)",
+                fontFamily:
+                    "var(--font-heading)",
 
-                transitionDuration: "var(--motion-fast)",
+                fontSize:
+                    "var(--font-size-2xl)",
+
+                fontWeight:
+                    "var(--font-weight-bold)",
+
+                lineHeight:
+                    "var(--line-height-heading)",
+
+                letterSpacing:
+                    "var(--letter-spacing-heading)",
+
+                transitionDuration:
+                    "var(--motion-fast)",
+
                 transitionTimingFunction:
-                    "var(--motion-easing)",
+                    "var(--motion-easing-standard)",
             }}
         >
             Between the Lines

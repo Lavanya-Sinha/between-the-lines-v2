@@ -5,73 +5,90 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function ProfilePictureMenu({
-  profilePicture,
-  displayName,
-  initials,
+    profilePicture,
+    displayName,
+    initials,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isViewing, setIsViewing] = useState(false);
+    const [isOpen, setIsOpen] =
+        useState(false);
 
-  return (
-    <div className="relative">
-      {/* Profile picture */}
-      <button
-        type="button"
-        onClick={() => setIsOpen((value) => !value)}
-        aria-label="Profile picture options"
-        aria-expanded={isOpen}
-       className="
-    relative
-    flex
-    h-20
-    w-20
-    shrink-0
-    items-center
-    justify-center
-    overflow-hidden
-    rounded-full
-    cursor-pointer
-    transition-all
-    duration-300
-    hover:scale-105
-"
-        style={{
-          backgroundColor: "var(--surfaceSecondary)",
+    const [isViewing, setIsViewing] =
+        useState(false);
 
-          border: "1px solid var(--border)",
+    return (
+        <div className="relative">
+            {/* Profile picture */}
 
-          color: "var(--text-primary)",
+            <button
+                type="button"
+                onClick={() =>
+                    setIsOpen(
+                        (value) => !value
+                    )
+                }
+                aria-label="Profile picture options"
+                aria-expanded={isOpen}
+                className="
+                    relative
+                    flex
+                    h-20
+                    w-20
+                    shrink-0
+                    cursor-pointer
+                    items-center
+                    justify-center
+                    overflow-hidden
+                    rounded-full
+                    transition-all
+                    hover:scale-105
+                "
+                style={{
+                    backgroundColor:
+                        "var(--surface-secondary)",
 
-          fontFamily: "var(--font-body)",
+                    border:
+                        "var(--border-normal) solid var(--border)",
 
-          fontSize: "var(--font-size-xl)",
+                    color:
+                        "var(--text-primary)",
 
-          fontWeight: "var(--font-weight-semibold)",
+                    fontFamily:
+                        "var(--font-body)",
 
-          boxShadow: "var(--shadow-sm)",
+                    fontSize:
+                        "var(--font-size-xl)",
 
-          transitionDuration: "var(--motion-fast)",
+                    fontWeight:
+                        "var(--font-weight-semibold)",
 
-          transitionTimingFunction: "var(--motion-easing)",
-        }}
-      >
-        {profilePicture ? (
-          <Image
-            src={profilePicture}
-            alt={displayName}
-            fill
-            className="rounded-full object-cover"
-            sizes="80px"
-          />
-        ) : (
-          initials || "BT"
-        )}
-      </button>
+                    boxShadow:
+                        "var(--shadow-sm)",
 
-      {/* Options */}
-      {isOpen && (
-        <div
-          className="
+                    transitionDuration:
+                        "var(--motion-fast)",
+
+                    transitionTimingFunction:
+                        "var(--motion-easing)",
+                }}
+            >
+                {profilePicture ? (
+                    <Image
+                        src={profilePicture}
+                        alt={displayName}
+                        fill
+                        className="rounded-full object-cover"
+                        sizes="80px"
+                    />
+                ) : (
+                    initials || "BT"
+                )}
+            </button>
+
+            {/* Options */}
+
+            {isOpen && (
+                <div
+                    className="
                         absolute
                         left-0
                         top-full
@@ -82,128 +99,198 @@ export default function ProfilePictureMenu({
                         flex-col
                         overflow-hidden
                     "
-          style={{
-            backgroundColor: "var(--surface)",
+                    style={{
+                        backgroundColor:
+                            "var(--surface)",
 
-            border: "1px solid var(--border)",
+                        border:
+                            "var(--border-normal) solid var(--border)",
 
-            borderRadius: "var(--radius-lg)",
+                        borderRadius:
+                            "var(--radius-lg)",
 
-            boxShadow: "var(--shadow-md)",
+                        boxShadow:
+                            "var(--shadow-md)",
 
-            fontFamily: "var(--font-body)",
+                        fontFamily:
+                            "var(--font-body)",
 
-            transition: "var(--motion-fast)",
-          }}
-        >
-          {profilePicture && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsViewing(true);
-                setIsOpen(false);
-              }}
-              className="
+                        transition:
+                            "var(--transition-card)",
+                    }}
+                >
+                    {profilePicture && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setIsViewing(
+                                    true
+                                );
+
+                                setIsOpen(
+                                    false
+                                );
+                            }}
+                            className="
+                                cursor-pointer
                                 px-4
                                 py-3
                                 text-left
-                                cursor-pointer
                                 transition-all
-                                duration-300
-                                hover:bg-[var(--surfaceSecondary)]
                             "
-            >
-              View
-            </button>
-          )}
+                            style={{
+                                color:
+                                    "var(--text-primary)",
 
-          <Link
-            href="/profile/picture-picker"
-            onClick={() => setIsOpen(false)}
-            className="
+                                fontSize:
+                                    "var(--font-size-sm)",
+
+                                fontWeight:
+                                    "var(--font-weight-medium)",
+
+                                transitionDuration:
+                                    "var(--motion-fast)",
+
+                                transitionTimingFunction:
+                                    "var(--motion-easing)",
+                            }}
+                        >
+                            View
+                        </button>
+                    )}
+
+                    <Link
+                        href="/profile/picture-picker"
+                        onClick={() =>
+                            setIsOpen(false)
+                        }
+                        className="
                             px-4
                             py-3
                             transition-all
-                            duration-300
-                            hover:bg-[var(--surfaceSecondary)]
                         "
-          >
-            {profilePicture ? "Change" : "Add Picture"}
-          </Link>
+                        style={{
+                            color:
+                                "var(--text-primary)",
+
+                            fontSize:
+                                "var(--font-size-sm)",
+
+                            fontWeight:
+                                "var(--font-weight-medium)",
+
+                            transitionDuration:
+                                "var(--motion-fast)",
+
+                            transitionTimingFunction:
+                                "var(--motion-easing)",
+                        }}
+                    >
+                        {profilePicture
+                            ? "Change"
+                            : "Add Picture"}
+                    </Link>
+                </div>
+            )}
+
+            {/* View picture */}
+
+            {isViewing &&
+                profilePicture && (
+                    <div
+                        className="
+                            fixed
+                            inset-0
+                            z-50
+                            flex
+                            items-center
+                            justify-center
+                            p-8
+                        "
+                        style={{
+                            backgroundColor:
+                                "color-mix(in srgb, var(--background) 80%, transparent)",
+                        }}
+                    >
+                        <button
+                            type="button"
+                            aria-label="Close profile picture"
+                            onClick={() =>
+                                setIsViewing(
+                                    false
+                                )
+                            }
+                            className="
+                                absolute
+                                inset-0
+                                cursor-default
+                            "
+                        />
+
+                        <div
+                            className="
+                                relative
+                                z-10
+                                h-72
+                                w-72
+                                overflow-hidden
+                                rounded-full
+                            "
+                            style={{
+                                border:
+                                    "var(--border-normal) solid var(--border)",
+
+                                boxShadow:
+                                    "var(--shadow-lg)",
+                            }}
+                        >
+                            <Image
+                                src={
+                                    profilePicture
+                                }
+                                alt={
+                                    displayName
+                                }
+                                fill
+                                sizes="320px"
+                                className="
+                                    rounded-full
+                                    object-cover
+                                "
+                            />
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setIsViewing(
+                                    false
+                                )
+                            }
+                            aria-label="Close profile picture"
+                            className="
+                                absolute
+                                right-6
+                                top-6
+                                z-20
+                                cursor-pointer
+                                text-2xl
+                            "
+                            style={{
+                                color:
+                                    "var(--text-primary)",
+
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                transition:
+                                    "var(--motion-fast)",
+                            }}
+                        >
+                            ×
+                        </button>
+                    </div>
+                )}
         </div>
-      )}
-
-      {/* View picture */}
-      {isViewing && profilePicture && (
-        <div
-          className="
-            fixed
-            inset-0
-            z-50
-            flex
-            items-center
-            justify-center
-            p-8
-        "
-          style={{
-            backgroundColor:
-              "color-mix(in srgb, var(--background) 80%, transparent)",
-          }}
-        >
-          <button
-            type="button"
-            aria-label="Close profile picture"
-            onClick={() => setIsViewing(false)}
-            className="
-                absolute
-                inset-0
-                cursor-default
-            "
-          />
-
-          <div
-            className="
-        relative
-        z-10
-        h-72
-        w-72
-        rounded-full
-        overflow-hidden
-    "
-            style={{
-              border: "1px solid var(--border)",
-              boxShadow: "var(--shadow-lg)",
-            }}
-          >
-            <Image
-              src={profilePicture}
-              alt={displayName}
-              fill
-              sizes="320px"
-              className="rounded-full object-cover"
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsViewing(false)}
-            aria-label="Close profile picture"
-            className="
-                absolute
-                right-6
-                top-6
-                z-20
-                cursor-pointer
-                text-2xl
-            "
-            style={{
-              color: "var(--text-primary)",
-            }}
-          >
-            ×
-          </button>
-        </div>
-      )}
-    </div>
-  );
+    );
 }

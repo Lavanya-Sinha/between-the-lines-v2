@@ -1,6 +1,7 @@
 import Divider from "../ui/Divider";
 import Logo from "./Logo";
 import ProfileButton from "./ProfileButton";
+
 import getCurrentUser from "@/lib/auth/auth";
 
 export default async function Navbar() {
@@ -15,18 +16,23 @@ export default async function Navbar() {
                 transition-all
             "
             style={{
-                backgroundColor: "var(--background)",
-                color: "var(--text-primary)",
+                backgroundColor:
+                    "var(--background)",
 
-                boxShadow: "var(--shadow-sm)",
+                color:
+                    "var(--text-primary)",
 
-                transitionDuration: "var(--motion-normal)",
+                boxShadow:
+                    "var(--shadow-card)",
+
+                transitionDuration:
+                    "var(--motion-normal)",
+
                 transitionTimingFunction:
-                    "var(--motion-easing)",
+                    "var(--motion-easing-standard)",
 
-                backgroundImage: "var(--navbar-texture)",
-
-                backdropFilter: "blur(12px)",
+                backdropFilter:
+                    "blur(12px)",
             }}
         >
             <nav
@@ -45,8 +51,12 @@ export default async function Navbar() {
 
                 {user && (
                     <ProfileButton
-                        displayName={user.display_name}
-                        profilePicture={user.profile_picture}
+                        displayName={
+                            user.display_name
+                        }
+                        profilePicture={
+                            user.profile_picture
+                        }
                     />
                 )}
             </nav>

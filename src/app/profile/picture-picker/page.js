@@ -2,59 +2,45 @@ import Link from "next/link";
 
 import getProfile from "@/lib/profile/getProfile";
 
+import ThemeBackground from "@/app/components/themes/ThemeBackground";
+import ThemeAtmosphere from "@/app/components/themes/ThemeAtmosphere";
+
 import Card from "@/app/components/ui/Card";
 import Divider from "@/app/components/ui/Divider";
+
 import ProfilePictureEditor from "@/app/components/profile/ProfilePictureEditor";
 
 const ProfilePicturePage = async () => {
     const profile = await getProfile();
 
     return (
-        <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 p-8">
+        <ThemeBackground className="min-h-screen overflow-hidden">
+            <ThemeAtmosphere
+                className="
+                    pointer-events-none
+                    fixed
+                    inset-0
+                    z-0
+                    opacity-15
+                "
+            />
 
-            <Link
-                href="/profile"
-                style={{
-                    fontFamily:
-                        "var(--font-body)",
-
-                    fontSize:
-                        "var(--font-size-base)",
-
-                    fontWeight:
-                        "var(--font-weight-medium)",
-
-                    lineHeight:
-                        "var(--line-height-body)",
-                }}
+            <main
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-screen
+                    max-w-3xl
+                    flex-col
+                    gap-8
+                    p-6
+                    sm:p-8
+                "
             >
-                ← Back to Profile
-            </Link>
-
-            <header className="flex flex-col gap-2">
-
-                <h1
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-
-                        fontSize:
-                            "var(--font-size-3xl)",
-
-                        fontWeight:
-                            "var(--font-weight-bold)",
-
-                        lineHeight:
-                            "var(--line-height-heading)",
-
-                        letterSpacing:
-                            "var(--letter-spacing-heading)",
-                    }}
-                >
-                    Profile Picture
-                </h1>
-
-                <p
+                <Link
+                    href="/profile"
                     style={{
                         fontFamily:
                             "var(--font-body)",
@@ -63,54 +49,109 @@ const ProfilePicturePage = async () => {
                             "var(--font-size-base)",
 
                         fontWeight:
-                            "var(--font-weight-normal)",
+                            "var(--font-weight-medium)",
 
                         lineHeight:
                             "var(--line-height-body)",
 
                         color:
-                            "var(--textMuted)",
+                            "var(--primary)",
                     }}
                 >
-                    Choose a picture that represents you.
-                </p>
+                    ← Back to Profile
+                </Link>
 
-            </header>
+                <header className="flex flex-col gap-2">
+                    <h1
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
 
-            <Card className="flex flex-col gap-6 p-8">
+                            fontSize:
+                                "var(--font-size-3xl)",
 
-                <h2
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
+                            fontWeight:
+                                "var(--font-weight-bold)",
 
-                        fontSize:
-                            "var(--font-size-2xl)",
+                            lineHeight:
+                                "var(--line-height-heading)",
 
-                        fontWeight:
-                            "var(--font-weight-bold)",
+                            letterSpacing:
+                                "var(--letter-spacing-heading)",
 
-                        lineHeight:
-                            "var(--line-height-heading)",
-                    }}
+                            color:
+                                "var(--text-primary)",
+                        }}
+                    >
+                        Profile Picture
+                    </h1>
+
+                    <p
+                        style={{
+                            fontFamily:
+                                "var(--font-body)",
+
+                            fontSize:
+                                "var(--font-size-base)",
+
+                            fontWeight:
+                                "var(--font-weight-normal)",
+
+                            lineHeight:
+                                "var(--line-height-body)",
+
+                            color:
+                                "var(--text-muted)",
+                        }}
+                    >
+                        Choose a picture that
+                        represents you.
+                    </p>
+                </header>
+
+                <Card
+                    className="
+                        flex
+                        flex-col
+                        gap-6
+                        p-6
+                        sm:p-8
+                    "
                 >
-                    Change your picture
-                </h2>
+                    <h2
+                        style={{
+                            fontFamily:
+                                "var(--font-heading)",
 
-                <Divider />
+                            fontSize:
+                                "var(--font-size-2xl)",
 
-                <ProfilePictureEditor
-                    profilePicture={
-                        profile.profilePicture
-                    }
-                    displayName={
-                        profile.displayName
-                    }
-                />
+                            fontWeight:
+                                "var(--font-weight-bold)",
 
-            </Card>
+                            lineHeight:
+                                "var(--line-height-heading)",
 
-        </main>
+                            color:
+                                "var(--text-primary)",
+                        }}
+                    >
+                        Change your picture
+                    </h2>
+
+                    <Divider />
+
+                    <ProfilePictureEditor
+                        profilePicture={
+                            profile.profilePicture
+                        }
+                        displayName={
+                            profile.displayName
+                        }
+                    />
+                </Card>
+            </main>
+        </ThemeBackground>
     );
 };
 

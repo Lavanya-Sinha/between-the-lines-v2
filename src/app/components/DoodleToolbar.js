@@ -18,108 +18,182 @@ const DoodleToolbar = ({
         "#ec4899",
     ];
 
-    const brushSizes = [2, 4, 8, 16, 32, 128];
+    const brushSizes = [
+        2,
+        4,
+        8,
+        16,
+        32,
+        128,
+    ];
+
+    const sectionHeadingStyle = {
+        fontFamily:
+            "var(--font-body)",
+
+        fontSize:
+            "var(--font-size-sm)",
+
+        fontWeight:
+            "var(--font-weight-semibold)",
+
+        lineHeight:
+            "var(--line-height-body)",
+
+        color:
+            "var(--text-primary)",
+    };
 
     return (
-        <Card className="flex flex-col gap-6 p-6">
+        <Card
+            className="
+                flex
+                flex-col
+                gap-6
+                p-6
+            "
+        >
+            {/* Brush size */}
 
-            <div className="flex flex-col gap-2">
-
+            <div
+                className="
+                    flex
+                    flex-col
+                    gap-3
+                "
+            >
                 <h3
-                    style={{
-                        fontFamily: "var(--font-body)",
-                        fontWeight: "var(--font-weight-semibold)",
-                    }}
+                    style={
+                        sectionHeadingStyle
+                    }
                 >
                     Brush size
                 </h3>
 
-                <div className="flex flex-wrap gap-2">
-
-                    {brushSizes.map((size) => (
-                        <Button
-                            key={size}
-                            type="button"
-                            variant={
-                                tool.brushSize === size
-                                    ? "primary"
-                                    : "ghost"
-                            }
-                            onClick={() =>
-                                setTool({
-                                    ...tool,
-                                    brushSize: size,
-                                })
-                            }
-                        >
-                            {size}
-                        </Button>
-                    ))}
-
+                <div
+                    className="
+                        flex
+                        flex-wrap
+                        gap-2
+                    "
+                >
+                    {brushSizes.map(
+                        (size) => (
+                            <Button
+                                key={size}
+                                type="button"
+                                variant={
+                                    tool.brushSize ===
+                                    size
+                                        ? "primary"
+                                        : "ghost"
+                                }
+                                onClick={() =>
+                                    setTool({
+                                        ...tool,
+                                        brushSize:
+                                            size,
+                                    })
+                                }
+                            >
+                                {size}
+                            </Button>
+                        )
+                    )}
                 </div>
-
             </div>
 
-            <div className="flex flex-col gap-2">
+            {/* Colors */}
 
+            <div
+                className="
+                    flex
+                    flex-col
+                    gap-3
+                "
+            >
                 <h3
-                    style={{
-                        fontFamily: "var(--font-body)",
-                        fontWeight: "var(--font-weight-semibold)",
-                    }}
+                    style={
+                        sectionHeadingStyle
+                    }
                 >
                     Colors
                 </h3>
 
-                <div className="flex flex-wrap gap-3">
+                <div
+                    className="
+                        flex
+                        flex-wrap
+                        gap-3
+                    "
+                >
+                    {colors.map(
+                        (color) => {
+                            const isSelected =
+                                tool.color ===
+                                color;
 
-                    {colors.map((color) => (
-                        <button
-                            key={color}
-                            type="button"
-                            onClick={() =>
-                                setTool({
-                                    ...tool,
-                                    color,
-                                })
-                            }
-                            className="
-                                h-10
-                                w-10
-                                rounded-full
-                                border-2
-                                transition-all
-                                cursor-pointer
-                            "
-                            style={{
-                                backgroundColor: color,
+                            return (
+                                <button
+                                    key={color}
+                                    type="button"
+                                    aria-label={`Select ${color} brush color`}
+                                    aria-pressed={
+                                        isSelected
+                                    }
+                                    onClick={() =>
+                                        setTool({
+                                            ...tool,
+                                            color,
+                                        })
+                                    }
+                                    className="
+                                        h-10
+                                        w-10
+                                        cursor-pointer
+                                        rounded-full
+                                        border-2
+                                        transition-all
+                                    "
+                                    style={{
+                                        backgroundColor:
+                                            color,
 
-                                borderColor:
-                                    tool.color === color
-                                        ? "var(--primary)"
-                                        : "var(--border)",
+                                        borderColor:
+                                            isSelected
+                                                ? "var(--primary)"
+                                                : "var(--border)",
 
-                                boxShadow: "var(--shadow-sm)",
+                                        boxShadow:
+                                            "var(--shadow-sm)",
 
-                                transitionDuration:
-                                    "var(--motion-fast)",
+                                        transitionDuration:
+                                            "var(--motion-fast)",
 
-                                transitionTimingFunction:
-                                    "var(--motion-easing)",
-                            }}
-                        />
-                    ))}
-
+                                        transitionTimingFunction:
+                                            "var(--motion-easing)",
+                                    }}
+                                />
+                            );
+                        }
+                    )}
                 </div>
-
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            {/* Drawing mode */}
 
+            <div
+                className="
+                    flex
+                    flex-wrap
+                    gap-3
+                "
+            >
                 <Button
                     type="button"
                     variant={
-                        tool.mode === "draw"
+                        tool.mode ===
+                        "draw"
                             ? "primary"
                             : "ghost"
                     }
@@ -136,7 +210,8 @@ const DoodleToolbar = ({
                 <Button
                     type="button"
                     variant={
-                        tool.mode === "erase"
+                        tool.mode ===
+                        "erase"
                             ? "primary"
                             : "ghost"
                     }
@@ -149,11 +224,17 @@ const DoodleToolbar = ({
                 >
                     🧽 Erase
                 </Button>
-
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            {/* History */}
 
+            <div
+                className="
+                    flex
+                    flex-wrap
+                    gap-3
+                "
+            >
                 <Button
                     type="button"
                     variant="ghost"
@@ -173,13 +254,13 @@ const DoodleToolbar = ({
                 <Button
                     type="button"
                     variant="danger"
-                    onClick={handleCanvasClear}
+                    onClick={
+                        handleCanvasClear
+                    }
                 >
                     Clear
                 </Button>
-
             </div>
-
         </Card>
     );
 };

@@ -7,13 +7,8 @@ export default function Card({
 }) {
     return (
         <div
-            className={`
-                p-6
-                transition-all
-                ${className}
-            `}
+            className={`p-6 transition-all ${className}`}
             style={{
-
                 backgroundColor:
                     "var(--surface)",
 

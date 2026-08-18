@@ -19,7 +19,8 @@ const ProfilePictureEditor = ({
         useState(profilePicture);
 
     const handleFileChange = (event) => {
-        const file = event.target.files?.[0];
+        const file =
+            event.target.files?.[0];
 
         if (!file) {
             return;
@@ -34,26 +35,31 @@ const ProfilePictureEditor = ({
     return (
         <form
             action={ChangeProfilePicture}
-            className="flex flex-col items-center gap-6"
+            className="
+                flex
+                flex-col
+                items-center
+                gap-6
+            "
         >
-
             <div
                 className="
                     relative
                     flex
                     h-40
                     w-40
+                    shrink-0
                     items-center
                     justify-center
                     overflow-hidden
-                     rounded-full
+                    rounded-full
                 "
                 style={{
                     backgroundColor:
-                        "var(--surfaceSecondary)",
+                        "var(--surface-secondary)",
 
                     border:
-                        "1px solid var(--border)",
+                        "var(--border-normal) solid var(--border)",
 
                     color:
                         "var(--text-primary)",
@@ -91,19 +97,28 @@ const ProfilePictureEditor = ({
 
             <label
                 htmlFor="profile-picture"
-                className="cursor-pointer"
+                className="
+                    cursor-pointer
+                    transition-all
+                "
+                style={{
+                    transitionDuration:
+                        "var(--motion-fast)",
+
+                    transitionTimingFunction:
+                        "var(--motion-easing)",
+                }}
             >
                 <span
                     className="
                         inline-flex
                         items-center
                         justify-center
-                        rounded-xl
+                        rounded-lg
                         border
                         px-4
                         py-3
                         transition-all
-                        duration-300
                     "
                     style={{
                         backgroundColor:
@@ -115,8 +130,23 @@ const ProfilePictureEditor = ({
                         color:
                             "var(--text-primary)",
 
+                        fontFamily:
+                            "var(--font-body)",
+
+                        fontSize:
+                            "var(--font-size-sm)",
+
+                        fontWeight:
+                            "var(--font-weight-medium)",
+
                         boxShadow:
                             "var(--shadow-sm)",
+
+                        transitionDuration:
+                            "var(--motion-fast)",
+
+                        transitionTimingFunction:
+                            "var(--motion-easing)",
                     }}
                 >
                     Choose Image
@@ -137,7 +167,6 @@ const ProfilePictureEditor = ({
             <Button type="submit">
                 Save Picture
             </Button>
-
         </form>
     );
 };

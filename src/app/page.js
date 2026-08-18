@@ -3,33 +3,37 @@ import Link from "next/link";
 import Button from "./components/ui/Button";
 import Card from "./components/ui/Card";
 
+import ThemeBackground from "./components/themes/ThemeBackground";
+import ThemeAtmosphere from "./components/themes/ThemeAtmosphere";
+import SharedIllustration from "./components/themes/SharedIllustration";
+
 const features = [
     {
-        icon: "📚",
+        illustration: "bookshelf",
         title: "Organize your books",
         description:
             "Build your own digital bookshelf and keep every story within reach.",
     },
     {
-        icon: "💭",
+        illustration: "open-book",
         title: "Save meaningful quotes",
         description:
             "Preserve the lines that stayed with you long after you turned the page.",
     },
     {
-        icon: "📝",
+        illustration: "reading",
         title: "Write reflections",
         description:
             "Record your thoughts, emotions, and discoveries as you read.",
     },
     {
-        icon: "🎨",
+        illustration: "empty-doodle",
         title: "Create doodles",
         description:
             "Sketch ideas, symbols, and moments that deserve more than words.",
     },
     {
-        icon: "🤖",
+        illustration: "open-book",
         title: "AI companion",
         description:
             "Explore themes, ask questions, and uncover new perspectives on every story.",
@@ -38,151 +42,305 @@ const features = [
 
 export default function Home() {
     return (
-        <main className="mx-auto flex min-h-screen max-w-7xl flex-col gap-16 px-8 py-12">
+        <ThemeBackground className="min-h-screen overflow-hidden">
+            <ThemeAtmosphere
+                className="
+                    pointer-events-none
+                    absolute
+                    inset-0
+                    z-0
+                    opacity-30
+                "
+            />
 
-            <section className="flex flex-col gap-8">
-
-                <h1
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-
-                        fontSize:
-                            "var(--font-size-3xl)",
-
-                        fontWeight:
-                            "var(--font-weight-bold)",
-
-                        lineHeight:
-                            "var(--line-height-heading)",
-
-                        letterSpacing:
-                            "var(--letter-spacing-heading)",
-                    }}
+            <main
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-screen
+                    max-w-7xl
+                    flex-col
+                    gap-20
+                    px-6
+                    py-12
+                    sm:px-8
+                    lg:py-20
+                "
+            >
+                <section
+                    className="
+                        grid
+                        items-center
+                        gap-10
+                        lg:grid-cols-2
+                    "
                 >
-                    Between the Lines
-                </h1>
+                    <div
+                        className="
+                            flex
+                            max-w-2xl
+                            flex-col
+                            gap-6
+                        "
+                    >
+                        <p
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
 
-                <p
-                    className="max-w-2xl"
-                    style={{
-                        fontFamily:
-                            "var(--font-body)",
+                                fontSize:
+                                    "var(--font-size-sm)",
 
-                        fontSize:
-                            "var(--font-size-lg)",
+                                fontWeight:
+                                    "var(--font-weight-semibold)",
 
-                        fontWeight:
-                            "var(--font-weight-regular)",
+                                color:
+                                    "var(--primary)",
 
-                        lineHeight:
-                            "var(--line-height-body)",
-
-                        color:
-                            "var(--text-secondary)",
-                    }}
-                >
-                    Your personal reading journal to save
-                    books, memorable quotes, reflections,
-                    doodles, and more.
-                </p>
-
-                <div className="flex gap-4">
-                    <Link href="/signup">
-                        <Button>
-                            Sign Up
-                        </Button>
-                    </Link>
-
-                    <Link href="/login">
-                        <Button variant="ghost">
-                            Log In
-                        </Button>
-                    </Link>
-                </div>
-
-            </section>
-
-            <section>
-
-                <h2
-                    className="mb-8"
-                    style={{
-                        fontFamily:
-                            "var(--font-heading)",
-
-                        fontSize:
-                            "var(--font-size-2xl)",
-
-                        fontWeight:
-                            "var(--font-weight-semibold)",
-
-                        lineHeight:
-                            "var(--line-height-heading)",
-
-                        letterSpacing:
-                            "var(--letter-spacing-heading)",
-                    }}
-                >
-                    Features
-                </h2>
-
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-
-                    {features.map((feature) => (
-                        <Card
-                            key={feature.title}
-                            className="flex flex-col gap-4 p-8"
+                                letterSpacing:
+                                    "var(--letter-spacing-wide)",
+                            }}
                         >
-                            <span className="text-4xl">
-                                {feature.icon}
-                            </span>
+                            YOUR PERSONAL READING JOURNAL
+                        </p>
 
-                            <h3
-                                style={{
-                                    fontFamily:
-                                        "var(--font-heading)",
+                        <h1
+                            style={{
+                                fontFamily:
+                                    "var(--font-heading)",
 
-                                    fontSize:
-                                        "var(--font-size-xl)",
+                                fontSize:
+                                    "var(--font-size-4xl)",
 
-                                    fontWeight:
-                                        "var(--font-weight-semibold)",
+                                fontWeight:
+                                    "var(--font-weight-bold)",
 
-                                    lineHeight:
-                                        "var(--line-height-heading)",
-                                }}
+                                lineHeight:
+                                    "var(--line-height-heading)",
+
+                                letterSpacing:
+                                    "var(--letter-spacing-heading)",
+
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Between the Lines
+                        </h1>
+
+                        <p
+                            className="max-w-2xl"
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-lg)",
+
+                                fontWeight:
+                                    "var(--font-weight-regular)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            Your personal reading journal
+                            to save books, memorable
+                            quotes, reflections, doodles,
+                            and more.
+                        </p>
+
+                        <div
+                            className="
+                                flex
+                                flex-wrap
+                                gap-4
+                            "
+                        >
+                            <Link href="/signup">
+                                <Button>
+                                    Start your journal
+                                </Button>
+                            </Link>
+
+                            <Link href="/login">
+                                <Button variant="ghost">
+                                    Log In
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div
+                        className="
+                            flex
+                            items-center
+                            justify-center
+                        "
+                    >
+                        <SharedIllustration
+                            name="reading"
+                            alt=""
+                            width={700}
+                            height={550}
+                            priority
+                            className="
+                                h-auto
+                                max-h-[32rem]
+                                w-full
+                                max-w-xl
+                                object-contain
+                            "
+                        />
+                    </div>
+                </section>
+
+                <section className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-3">
+                        <h2
+                            style={{
+                                fontFamily:
+                                    "var(--font-heading)",
+
+                                fontSize:
+                                    "var(--font-size-2xl)",
+
+                                fontWeight:
+                                    "var(--font-weight-semibold)",
+
+                                lineHeight:
+                                    "var(--line-height-heading)",
+
+                                letterSpacing:
+                                    "var(--letter-spacing-heading)",
+
+                                color:
+                                    "var(--text-primary)",
+                            }}
+                        >
+                            Everything your reading life
+                            needs
+                        </h2>
+
+                        <p
+                            className="max-w-2xl"
+                            style={{
+                                fontFamily:
+                                    "var(--font-body)",
+
+                                fontSize:
+                                    "var(--font-size-base)",
+
+                                fontWeight:
+                                    "var(--font-weight-regular)",
+
+                                lineHeight:
+                                    "var(--line-height-body)",
+
+                                color:
+                                    "var(--text-secondary)",
+                            }}
+                        >
+                            Keep the books you love,
+                            the words that stay with you,
+                            and the thoughts they inspire
+                            together.
+                        </p>
+                    </div>
+
+                    <div
+                        className="
+                            grid
+                            gap-6
+                            sm:grid-cols-2
+                            lg:grid-cols-3
+                        "
+                    >
+                        {features.map((feature) => (
+                            <Card
+                                key={feature.title}
+                                className="
+                                    flex
+                                    flex-col
+                                    gap-5
+                                    p-6
+                                "
                             >
-                                {feature.title}
-                            </h3>
+                                <SharedIllustration
+                                    name={
+                                        feature.illustration
+                                    }
+                                    alt=""
+                                    width={180}
+                                    height={180}
+                                    className="
+                                        h-32
+                                        w-32
+                                        object-contain
+                                    "
+                                />
 
-                            <p
-                                style={{
-                                    fontFamily:
-                                        "var(--font-body)",
+                                <div
+                                    className="
+                                        flex
+                                        flex-col
+                                        gap-2
+                                    "
+                                >
+                                    <h3
+                                        style={{
+                                            fontFamily:
+                                                "var(--font-heading)",
 
-                                    fontSize:
-                                        "var(--font-size-base)",
+                                            fontSize:
+                                                "var(--font-size-xl)",
 
-                                    fontWeight:
-                                        "var(--font-weight-regular)",
+                                            fontWeight:
+                                                "var(--font-weight-semibold)",
 
-                                    lineHeight:
-                                        "var(--line-height-body)",
+                                            lineHeight:
+                                                "var(--line-height-heading)",
 
-                                    color:
-                                        "var(--text-secondary)",
-                                }}
-                            >
-                                {feature.description}
-                            </p>
-                        </Card>
-                    ))}
+                                            color:
+                                                "var(--text-primary)",
+                                        }}
+                                    >
+                                        {feature.title}
+                                    </h3>
 
-                </div>
+                                    <p
+                                        style={{
+                                            fontFamily:
+                                                "var(--font-body)",
 
-            </section>
+                                            fontSize:
+                                                "var(--font-size-base)",
 
-        </main>
+                                            fontWeight:
+                                                "var(--font-weight-regular)",
+
+                                            lineHeight:
+                                                "var(--line-height-body)",
+
+                                            color:
+                                                "var(--text-secondary)",
+                                        }}
+                                    >
+                                        {
+                                            feature.description
+                                        }
+                                    </p>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                </section>
+            </main>
+        </ThemeBackground>
     );
 }

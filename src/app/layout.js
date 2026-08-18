@@ -20,7 +20,13 @@ import "./globals.css";
 
 import { ThemeProvider } from "@/context/ThemeContext";
 import Navbar from "./components/navigation/Navbar";
+import ThemeSound from "./components/themes/ThemeSound";
 
+import requireUser from "@/lib/auth/requireUser";
+import {
+    themes,
+    defaultTheme,
+} from "@/themes/registry";
 
 // ========================================
 // Autumn
@@ -40,7 +46,6 @@ const caveat = Caveat({
     variable: "--font-caveat",
     subsets: ["latin"],
 });
-
 
 // ========================================
 // Forest
@@ -67,7 +72,6 @@ const patrickHand = Patrick_Hand({
     weight: "400",
 });
 
-
 // ========================================
 // Diary
 // ========================================
@@ -81,7 +85,6 @@ const dmSans = DM_Sans({
     variable: "--font-dm-sans",
     subsets: ["latin"],
 });
-
 
 // ========================================
 // Rain
@@ -109,7 +112,6 @@ const kalam = Kalam({
     weight: ["400", "700"],
 });
 
-
 // ========================================
 // Night
 // ========================================
@@ -124,7 +126,6 @@ const manrope = Manrope({
     subsets: ["latin"],
 });
 
-
 // ========================================
 // Metadata
 // ========================================
@@ -135,12 +136,26 @@ export const metadata = {
         "Your personal reading journal.",
 };
 
-
 // ========================================
 // Root Layout
 // ========================================
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({
+    children,
+}) {
+    let initialTheme = defaultTheme;
+
+    try {
+        const user = await requireUser();
+
+        if (themes[user.theme]) {
+            initialTheme = themes[user.theme];
+        }
+    } catch {
+        // User is not logged in.
+        // Use the default theme.
+    }
+
     return (
         <html
             lang="en"
@@ -169,14 +184,16 @@ export default function RootLayout({ children }) {
             `}
         >
             <body className="min-h-full flex flex-col">
-                <ThemeProvider>
-
+                <ThemeProvider
+                    initialTheme={initialTheme}
+                >
                     <Navbar />
+
+                    <ThemeSound />
 
                     <main className="flex-1">
                         {children}
                     </main>
-
                 </ThemeProvider>
             </body>
         </html>

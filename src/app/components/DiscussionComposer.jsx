@@ -9,11 +9,16 @@ import Button from "./ui/Button";
 import Card from "./ui/Card";
 import Textarea from "./ui/Textarea";
 
-const DiscussionComposer = ({ discussionId }) => {
+const DiscussionComposer = ({
+    discussionId,
+}) => {
     const router = useRouter();
 
-    const [message, setMessage] = useState("");
-    const [isSending, setIsSending] = useState(false);
+    const [message, setMessage] =
+        useState("");
+
+    const [isSending, setIsSending] =
+        useState(false);
 
     const handleSend = async () => {
         if (message.trim() === "") {
@@ -37,20 +42,50 @@ const DiscussionComposer = ({ discussionId }) => {
     };
 
     return (
-        <Card className="flex flex-col gap-6 p-6">
+        <Card
+            className="
+                flex
+                flex-col
+                gap-6
+                p-6
+            "
+        >
+            <div className="flex flex-col gap-2">
+                <label
+                    htmlFor="discussion-message"
+                    style={{
+                        fontFamily:
+                            "var(--font-body)",
 
-            <Textarea
-                value={message}
-                onChange={(e) =>
-                    setMessage(e.target.value)
-                }
-                rows={5}
-                placeholder="Continue the discussion..."
-                className="min-h-32 leading-8"
-            />
+                        fontSize:
+                            "var(--font-size-sm)",
+
+                        fontWeight:
+                            "var(--font-weight-semibold)",
+
+                        lineHeight:
+                            "var(--line-height-body)",
+
+                        color:
+                            "var(--text-primary)",
+                    }}
+                >
+                    Continue the discussion
+                </label>
+
+                <Textarea
+                    id="discussion-message"
+                    value={message}
+                    onChange={(e) =>
+                        setMessage(e.target.value)
+                    }
+                    rows={5}
+                    placeholder="Share your thoughts..."
+                    className="min-h-32 leading-8"
+                />
+            </div>
 
             <div className="flex justify-end">
-
                 <Button
                     onClick={handleSend}
                     disabled={
@@ -62,9 +97,7 @@ const DiscussionComposer = ({ discussionId }) => {
                         ? "Thinking..."
                         : "Send"}
                 </Button>
-
             </div>
-
         </Card>
     );
 };

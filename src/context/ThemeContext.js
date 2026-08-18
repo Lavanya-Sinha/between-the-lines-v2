@@ -12,14 +12,33 @@ import {
     defaultTheme,
 } from "@/themes/registry";
 
+import UpdateTheme from "@/app/actions/profile/UpdateTheme";
+
 const ThemeContext = createContext();
 
-export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState(defaultTheme);
+export function ThemeProvider({
+    children,
+    initialTheme = defaultTheme,
+}) {
+    const [theme, setThemeState] =
+        useState(initialTheme);
+
+    const setTheme = async (nextTheme) => {
+        setThemeState(nextTheme);
+
+        try {
+            await UpdateTheme(nextTheme.id);
+        } catch (error) {
+            console.error(
+                "Failed to save theme:",
+                error
+            );
+        }
+    };
 
     useEffect(() => {
-        const root = document.documentElement;
-
+        const root =
+            document.documentElement;
 
         Object.entries(theme.colors).forEach(
             ([key, value]) => {
@@ -34,7 +53,6 @@ export function ThemeProvider({ children }) {
             }
         );
 
-
         Object.entries(
             theme.typography.fonts
         ).forEach(([key, value]) => {
@@ -44,7 +62,6 @@ export function ThemeProvider({ children }) {
             );
         });
 
-
         Object.entries(
             theme.typography.sizes
         ).forEach(([key, value]) => {
@@ -53,7 +70,6 @@ export function ThemeProvider({ children }) {
                 value
             );
         });
-
 
         Object.entries(
             theme.typography.weights
@@ -72,7 +88,6 @@ export function ThemeProvider({ children }) {
                 value
             );
         });
-
 
         if (theme.typography.letterSpacing) {
             Object.entries(
@@ -93,7 +108,6 @@ export function ThemeProvider({ children }) {
                 value
             );
         });
-
 
         const borders =
             theme.shapes.borders ??
@@ -119,7 +133,6 @@ export function ThemeProvider({ children }) {
             );
         });
 
-
         Object.entries(
             theme.motion.duration
         ).forEach(([key, value]) => {
@@ -138,7 +151,6 @@ export function ThemeProvider({ children }) {
             );
         });
 
-
         if (theme.motion.scale) {
             Object.entries(
                 theme.motion.scale
@@ -150,7 +162,6 @@ export function ThemeProvider({ children }) {
             });
         }
 
-
         if (theme.motion.transitions) {
             Object.entries(
                 theme.motion.transitions
@@ -161,7 +172,6 @@ export function ThemeProvider({ children }) {
                 );
             });
         }
-
 
         root.style.setProperty(
             "--theme-id",

@@ -1,40 +1,79 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+    usePathname,
+    useRouter,
+    useSearchParams,
+} from "next/navigation";
+
 import useDebounce from "../hooks/useDebounce";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import Input from "./ui/Input";
 
-const Search = ({ placeholder, defaultValue }) => {
-  const [query, setQuery] = useState(defaultValue?? "")
-  const router = useRouter();
-const pathname = usePathname();
-const searchParams = useSearchParams();
-const debouncedQuery = useDebounce(query, 300);
+const Search = ({
+    placeholder = "Search your library...",
+    defaultValue = "",
+}) => {
+    const [query, setQuery] =
+        useState(defaultValue);
 
-useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    const currentSearch = searchParams.get("search") ?? "";
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
-if (currentSearch === debouncedQuery) {
-    return;
-}
+    const debouncedQuery = useDebounce(
+        query,
+        300
+    );
 
-    if (debouncedQuery) {
-        params.set("search", debouncedQuery);
-    } else {
-        params.delete("search");
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-}, [debouncedQuery]);
-  return (
-    <div>
-     <input
+    useEffect(() => {
+        const params = new URLSearchParams(
+            searchParams
+        );
+
+        const currentSearch =
+            searchParams.get("search") ?? "";
+
+        if (
+            currentSearch === debouncedQuery
+        ) {
+            return;
+        }
+
+        if (debouncedQuery) {
+            params.set(
+                "search",
+                debouncedQuery
+            );
+        } else {
+            params.delete("search");
+        }
+
+        const queryString =
+            params.toString();
+
+        router.replace(
+            queryString
+                ? `${pathname}?${queryString}`
+                : pathname
+        );
+    }, [
+        debouncedQuery,
+        pathname,
+        router,
+        searchParams,
+    ]);
+
+    return (
+        <Input
             type="search"
             placeholder={placeholder}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(event) =>
+                setQuery(event.target.value)
+            }
         />
-    </div>
-  );
+    );
 };
+
 export default Search;
