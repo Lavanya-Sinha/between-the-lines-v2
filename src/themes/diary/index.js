@@ -35,9 +35,9 @@ export const diaryTheme = {
     textSecondary: "#685254",
     textMuted: "#90787a",
 
-    textOnBackground: "#2E1D2B",
-    textOnBackgroundSecondary: "#4A3045",
-    textOnBackgroundMuted: "#684D63",
+    textOnBackground: "#D0C8CA",
+    textOnBackgroundSecondary: "#B8AFB2",
+    textOnBackgroundMuted: "#9D9498",
 
     success: "#64826a",
     warning: "#c18b67",
