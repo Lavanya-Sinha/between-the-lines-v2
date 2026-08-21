@@ -10,21 +10,21 @@ import log from "@/lib/logging/logger";
 
 const DeleteBook = async (formData) => {
   try {
-    await requireWriteAccess();
+    const user = await requireWriteAccess();
     const bookId = formData.get("id");
-  
+
     await requireOwnership("books", bookId);
-  
+
     const book = await prisma.books.findUnique({
       where: {
         id: Number(bookId),
       },
     });
-  
+
     if (!book) {
       throw new Error("Book not found.");
     }
-  
+
     const attachments = await prisma.attachments.findMany({
       where: {
         quote: {
@@ -32,30 +32,41 @@ const DeleteBook = async (formData) => {
         },
       },
     });
-  
+
     for (const attachment of attachments) {
       try {
-        await DeleteFile(attachment.public_id,   getResourceType(attachment.mime_type));
+        await DeleteFile(
+          attachment.public_id,
+          getResourceType(attachment.mime_type),
+        );
       } catch (error) {
         console.error(`Failed to delete ${attachment.file_url}`, error);
       }
     }
-  
+
     if (book.cover_public_id) {
       await DeleteFile(book.cover_public_id, "image");
     }
-  
+
     await prisma.books.delete({
       where: {
         id: Number.parseInt(bookId),
       },
     });
-   
-  //redis cache invalidation
-  await invalidateDashboard(book.user_id);
-  await invalidateBook(bookId);
 
-   log({
+    log({
+      level: "INFO",
+      file: "src/app/actions/Delete.js",
+      operation: "Delete Book",
+      message: "Database book deletion completed.",
+      userId: user.id,
+    });
+
+    //redis cache invalidation
+    await invalidateDashboard(user.id);
+    await invalidateBook(bookId);
+
+    log({
       level: "INFO",
       file: "src/app/actions/Delete.js",
       operation: "Delete Book",
@@ -63,9 +74,8 @@ const DeleteBook = async (formData) => {
       userId: user.id,
     });
     redirect("/dashboard");
-    
   } catch (error) {
-     log({
+    log({
       level: "ERROR",
       file: "src/app/actions/Delete.js",
       operation: "Delete Book",
