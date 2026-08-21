@@ -15,6 +15,7 @@ import ThemeAtmosphere from "@/app/components/themes/ThemeAtmosphere";
 import ThemeDecoratives from "@/app/components/themes/ThemeDecoratives";
 
 import Button from "@/app/components/ui/Button";
+import SubmitButton from "@/app/components/ui/Button/SubmitButton";
 import Card from "@/app/components/ui/Card";
 import Divider from "@/app/components/ui/Divider";
 import Input from "@/app/components/ui/Input";
@@ -134,7 +135,7 @@ const QuotePage = async ({
                                 "var(--line-height-body)",
 
                             color:
-                                 "var(--text-on-background)",
+                                "var(--text-on-background)",
                         }}
                     >
                         ← Back to Book
@@ -173,12 +174,12 @@ const QuotePage = async ({
                                 value={id}
                             />
 
-                            <Button
+                            <SubmitButton
                                 variant="danger"
-                                type="submit"
+                                loadingText="Deleting..."
                             >
                                 Delete Quote
-                            </Button>
+                            </SubmitButton>
                         </form>
                     </div>
                 </header>
@@ -239,7 +240,7 @@ const QuotePage = async ({
                                 "var(--line-height-heading)",
 
                             color:
-                                 "var(--text-on-background)",
+                                "var(--text-on-background)",
                         }}
                     >
                         Mood Tags
@@ -272,9 +273,11 @@ const QuotePage = async ({
                             value={id}
                         />
 
-                        <Button type="submit">
+                        <SubmitButton
+                            loadingText="Adding..."
+                        >
                             Add Tag
-                        </Button>
+                        </SubmitButton>
                     </form>
 
                     {quote.mood_tags.length > 0 && (
@@ -320,12 +323,12 @@ const QuotePage = async ({
                                                 value={id}
                                             />
 
-                                            <Button
-                                                 variant="ghostBackground"
-                                                type="submit"
+                                            <SubmitButton
+                                                variant="ghostBackground"
+                                                loadingText="Removing..."
                                             >
                                                 Remove
-                                            </Button>
+                                            </SubmitButton>
                                         </form>
                                     </div>
                                 )

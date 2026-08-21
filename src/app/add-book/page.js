@@ -8,35 +8,31 @@ import ThemeBackground from "../components/themes/ThemeBackground";
 import ThemeAtmosphere from "../components/themes/ThemeAtmosphere";
 
 import Button from "../components/ui/Button";
+import SubmitButton from "../components/ui/Button/SubmitButton";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 
 const AddBookPage = async () => {
-    await requireUser();
+  await requireUser();
 
-    const labelStyle = {
-        fontFamily:
-            "var(--font-body)",
+  const labelStyle = {
+    fontFamily: "var(--font-body)",
 
-        fontSize:
-            "var(--font-size-sm)",
+    fontSize: "var(--font-size-sm)",
 
-        fontWeight:
-            "var(--font-weight-semibold)",
+    fontWeight: "var(--font-weight-semibold)",
 
-        lineHeight:
-            "var(--line-height-body)",
+    lineHeight: "var(--line-height-body)",
 
-        color:
-            "var(--text-primary)",
-    };
+    color: "var(--text-primary)",
+  };
 
-    return (
-        <ThemeBackground>
-            <ThemeAtmosphere />
+  return (
+    <ThemeBackground>
+      <ThemeAtmosphere />
 
-            <main
-                className="
+      <main
+        className="
                     relative
                     z-10
                     mx-auto
@@ -50,190 +46,159 @@ const AddBookPage = async () => {
                     sm:px-8
                     lg:py-12
                 "
-            >
-                <Link
-                    href="/dashboard"
-                    style={{
-                        fontFamily:
-                            "var(--font-body)",
+      >
+        <Link
+          href="/dashboard"
+          style={{
+            fontFamily: "var(--font-body)",
 
-                        fontSize:
-                            "var(--font-size-base)",
+            fontSize: "var(--font-size-base)",
 
-                        fontWeight:
-                            "var(--font-weight-medium)",
+            fontWeight: "var(--font-weight-medium)",
 
-                        lineHeight:
-                            "var(--line-height-body)",
+            lineHeight: "var(--line-height-body)",
 
-                        color:
-                            "var(--text-on-background)",
-                    }}
-                >
-                    ← Back to Bookshelf
-                </Link>
+            color: "var(--text-on-background)",
+          }}
+        >
+          ← Back to Bookshelf
+        </Link>
 
-                <header
-                    className="
+        <header
+          className="
                         flex
                         flex-col
                         gap-2
                     "
-                >
-                    <h1
-                        style={{
-                            fontFamily:
-                                "var(--font-heading)",
+        >
+          <h1
+            style={{
+              fontFamily: "var(--font-heading)",
 
-                            fontSize:
-                                "var(--font-size-3xl)",
+              fontSize: "var(--font-size-3xl)",
 
-                            fontWeight:
-                                "var(--font-weight-bold)",
+              fontWeight: "var(--font-weight-bold)",
 
-                            lineHeight:
-                                "var(--line-height-heading)",
+              lineHeight: "var(--line-height-heading)",
 
-                            letterSpacing:
-                                "var(--letter-spacing-heading)",
+              letterSpacing: "var(--letter-spacing-heading)",
 
-                            color:
-                                "var(--text-on-background)",
-                        }}
-                    >
-                        Add a Book
-                    </h1>
+              color: "var(--text-on-background)",
+            }}
+          >
+            Add a Book
+          </h1>
 
-                    <p
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
 
-                            fontSize:
-                                "var(--font-size-base)",
+              fontSize: "var(--font-size-base)",
 
-                            fontWeight:
-                                "var(--font-weight-normal)",
+              fontWeight: "var(--font-weight-normal)",
 
-                            lineHeight:
-                                "var(--line-height-body)",
+              lineHeight: "var(--line-height-body)",
 
-                            color:
-                               "var(--text-on-background)",
-                        }}
-                    >
-                        Start building your personal
-                        bookshelf.
-                    </p>
-                </header>
+              color: "var(--text-on-background)",
+            }}
+          >
+            Start building your personal bookshelf.
+          </p>
+        </header>
 
-                <Card className="p-6 sm:p-8">
-                    <form
-                        action={CreateBook}
-                        className="
+        <Card className="p-6 sm:p-8">
+          <form
+            action={CreateBook}
+            className="
                             flex
                             flex-col
                             gap-6
                         "
-                    >
-                        <div
-                            className="
+          >
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label
-                                htmlFor="title"
-                                style={labelStyle}
-                            >
-                                Book Title
-                            </label>
+            >
+              <label htmlFor="title" style={labelStyle}>
+                Book Title
+              </label>
 
-                            <Input
-                                id="title"
-                                type="text"
-                                name="title"
-                                placeholder="The Midnight Library"
-                                autoComplete="off"
-                            />
-                        </div>
+              <Input
+                id="title"
+                type="text"
+                name="title"
+                placeholder="The Midnight Library"
+                autoComplete="off"
+              />
+            </div>
 
-                        <div
-                            className="
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label
-                                htmlFor="author"
-                                style={labelStyle}
-                            >
-                                Author Name
-                            </label>
+            >
+              <label htmlFor="author" style={labelStyle}>
+                Author Name
+              </label>
 
-                            <Input
-                                id="author"
-                                type="text"
-                                name="author"
-                                placeholder="Matt Haig"
-                                autoComplete="off"
-                            />
-                        </div>
+              <Input
+                id="author"
+                type="text"
+                name="author"
+                placeholder="Matt Haig"
+                autoComplete="off"
+              />
+            </div>
 
-                        <div
-                            className="
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label
-                                htmlFor="genres"
-                                style={labelStyle}
-                            >
-                                Genres
-                            </label>
+            >
+              <label htmlFor="genres" style={labelStyle}>
+                Genres
+              </label>
 
-                            <Input
-                                id="genres"
-                                type="text"
-                                name="genres"
-                                placeholder="Fantasy, Fiction, Philosophy"
-                            />
-                        </div>
+              <Input
+                id="genres"
+                type="text"
+                name="genres"
+                placeholder="Fantasy, Fiction, Philosophy"
+              />
+            </div>
 
-                        <div
-                            className="
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label
-                                htmlFor="book_cover"
-                                style={labelStyle}
-                            >
-                                Cover Image
-                            </label>
+            >
+              <label htmlFor="book_cover" style={labelStyle}>
+                Cover Image
+              </label>
 
-                            <Input
-                                id="book_cover"
-                                type="file"
-                                name="book_cover"
-                                accept="image/*"
-                            />
-                        </div>
+              <Input
+                id="book_cover"
+                type="file"
+                name="book_cover"
+                accept="image/*"
+              />
+            </div>
 
-                        <Button type="submit">
-                            Add Book
-                        </Button>
-                    </form>
-                </Card>
-            </main>
-        </ThemeBackground>
-    );
+            <SubmitButton loadingText="Adding Book...">Add Book</SubmitButton>
+          </form>
+        </Card>
+      </main>
+    </ThemeBackground>
+  );
 };
 
 export default AddBookPage;

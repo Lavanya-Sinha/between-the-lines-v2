@@ -1,6 +1,6 @@
 import DeleteAttachment from "../actions/DeleteAttachment";
 
-import Button from "@/app/components/ui/Button";
+import SubmitButton from "@/app/components/ui/Button/SubmitButton";
 
 const AttachmentDeletionForm = ({
     attachmentId,
@@ -27,12 +27,13 @@ const AttachmentDeletionForm = ({
                 value={id}
             />
 
-            <Button
+            <SubmitButton
                 type="submit"
                 variant="danger"
+                loadingText="Deleting..."
             >
                 Delete attachment
-            </Button>
+            </SubmitButton>
         </form>
     );
 };

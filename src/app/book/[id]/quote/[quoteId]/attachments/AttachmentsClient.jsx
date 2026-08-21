@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import CreateAttachment from "@/app/actions/CreateAttachment";
@@ -11,30 +11,43 @@ import Card from "@/app/components/ui/Card";
 const AttachmentsClient = ({ quoteId, id }) => {
     const router = useRouter();
 
-    const selectedFileRef = useRef(null);
+    const [selectedFile, setSelectedFile] =
+        useState(null);
+
+    const [loading, setLoading] =
+        useState(false);
 
     const handleAttachmentSave = async () => {
-        if (!selectedFileRef.current) {
+        if (!selectedFile || loading) {
             return;
         }
 
-        const formData = new FormData();
+        try {
+            setLoading(true);
 
-        formData.append("quoteId", quoteId);
-        formData.append(
-            "file",
-            selectedFileRef.current
-        );
-        formData.append("id", id);
+            const formData = new FormData();
 
-        await CreateAttachment(formData);
+            formData.append("quoteId", quoteId);
+            formData.append(
+                "file",
+                selectedFile
+            );
+            formData.append("id", id);
 
-        router.refresh();
+            await CreateAttachment(formData);
+
+            router.refresh();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleAttachmentChange = (event) => {
-        selectedFileRef.current =
-            event.target.files[0];
+        setSelectedFile(
+            event.target.files[0] ?? null
+        );
     };
 
     return (
@@ -124,19 +137,36 @@ const AttachmentsClient = ({ quoteId, id }) => {
                 <input
                     id="attachment"
                     type="file"
+                    disabled={loading}
                     onChange={
                         handleAttachmentChange
                     }
-                   className="w-full cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-sm text-[var(--text-primary)]"
+                    className="
+                        w-full
+                        cursor-pointer
+                        rounded-lg
+                        border
+                        border-[var(--border)]
+                        bg-[var(--surface)]
+                        p-3
+                        text-sm
+                        text-[var(--text-primary)]
+                        disabled:cursor-not-allowed
+                        disabled:opacity-60
+                    "
                 />
             </div>
 
             <div className="self-start">
                 <Button
                     type="button"
+                    loading={loading}
+                    disabled={!selectedFile}
                     onClick={handleAttachmentSave}
                 >
-                    Save Attachment
+                    {loading
+                        ? "Saving Attachment..."
+                        : "Save Attachment"}
                 </Button>
             </div>
         </Card>

@@ -16,6 +16,7 @@ import simplifyCanvas from "@/lib/canvas/simplifyCanvas";
 import DoodleToolbar from "@/app/components/DoodleToolbar";
 
 import Button from "@/app/components/ui/Button";
+import SubmitButton from "@/app/components/ui/Button/SubmitButton";
 import Card from "@/app/components/ui/Card";
 
 const DoodleClient = ({
@@ -31,6 +32,9 @@ const DoodleClient = ({
     const redoRef = useRef([]);
 
     const [isDrawing, setIsDrawing] =
+        useState(false);
+
+    const [loading, setLoading] =
         useState(false);
 
     const canvasBackground = "black";
@@ -176,6 +180,10 @@ const DoodleClient = ({
     };
 
     const handleCanvasSave = async () => {
+        if (loading) {
+            return;
+        }
+
         const EPSILON = 0.5;
 
         const optimizedCanvas =
@@ -184,19 +192,25 @@ const DoodleClient = ({
                 EPSILON
             );
 
-        if (doodle) {
-            await UpdateDoodle(
-                doodle.id,
+        try {
+            setLoading(true);
+
+            if (doodle) {
+                await UpdateDoodle(
+                    doodle.id,
+                    optimizedCanvas
+                );
+
+                return;
+            }
+
+            await CreateDoodle(
+                quoteId,
                 optimizedCanvas
             );
-
-            return;
+        } finally {
+            setLoading(false);
         }
-
-        await CreateDoodle(
-            quoteId,
-            optimizedCanvas
-        );
     };
 
     useEffect(() => {
@@ -299,11 +313,16 @@ const DoodleClient = ({
                 "
             >
                 <Button
+                    type="button"
+                    loading={loading}
+                    disabled={loading}
                     onClick={
                         handleCanvasSave
                     }
                 >
-                    Save Doodle
+                    {loading
+                        ? "Saving Doodle..."
+                        : "Save Doodle"}
                 </Button>
 
                 {doodle && (
@@ -322,12 +341,12 @@ const DoodleClient = ({
                             value={quoteId}
                         />
 
-                        <Button
+                        <SubmitButton
                             variant="danger"
-                            type="submit"
+                            loadingText="Deleting..."
                         >
                             Delete Doodle
-                        </Button>
+                        </SubmitButton>
                     </form>
                 )}
             </div>

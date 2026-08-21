@@ -7,46 +7,40 @@ import EndDiscussion from "../actions/discussions/EndDiscussion";
 
 import Button from "./ui/Button";
 
-const EndDiscussionButton = ({
-    discussionId,
-}) => {
-    const router = useRouter();
+const EndDiscussionButton = ({ discussionId }) => {
+  const router = useRouter();
 
-    const [isEnding, setIsEnding] =
-        useState(false);
+  const [isEnding, setIsEnding] = useState(false);
 
-    const buttonText = isEnding
-        ? "Ending..."
-        : "End Discussion";
+  const buttonText = isEnding ? "Ending..." : "End Discussion";
 
-    const handleEndDiscussion =
-        async () => {
-            setIsEnding(true);
+  const handleEndDiscussion = async () => {
+    setIsEnding(true);
 
-            try {
-                const discussion =
-                    await EndDiscussion({
-                        discussionId,
-                    });
+    try {
+      const discussion = await EndDiscussion({
+        discussionId,
+      });
 
-                router.push(
-                    `/book/${discussion.reflection.quote.book.id}/quote/${discussion.reflection.quote.id}/reflection/${discussion.reflection_id}`
-                );
-            } finally {
-                setIsEnding(false);
-            }
-        };
+      router.push(
+        `/book/${discussion.reflection.quote.book.id}/quote/${discussion.reflection.quote.id}/reflection/${discussion.reflection_id}`,
+      );
+    } finally {
+      setIsEnding(false);
+    }
+  };
 
-    return (
-        <Button
-            type="button"
-            variant="danger"
-            onClick={handleEndDiscussion}
-            disabled={isEnding}
-        >
-            {buttonText}
-        </Button>
-    );
+  return (
+    <Button
+      type="button"
+      variant="danger"
+      onClick={handleEndDiscussion}
+      loading={isEnding}
+      disabled={isEnding}
+    >
+      {buttonText}
+    </Button>
+  );
 };
 
 export default EndDiscussionButton;

@@ -15,6 +15,7 @@ import ThemeAtmosphere from "@/app/components/themes/ThemeAtmosphere";
 import ThemeDecoratives from "@/app/components/themes/ThemeDecoratives";
 
 import Button from "@/app/components/ui/Button";
+import SubmitButton from "@/app/components/ui/Button/SubmitButton";
 import Card from "@/app/components/ui/Card";
 import Divider from "@/app/components/ui/Divider";
 import EmptyState from "@/app/components/ui/EmptyStates";
@@ -167,9 +168,9 @@ const ReflectionPage = async ({ params, searchParams }) => {
 
               <input type="hidden" name="book_id" value={id} />
 
-              <Button variant="danger" type="submit">
+              <SubmitButton variant="danger" loadingText="Deleting...">
                 Delete Reflection
-              </Button>
+              </SubmitButton>
             </form>
           </div>
         </header>

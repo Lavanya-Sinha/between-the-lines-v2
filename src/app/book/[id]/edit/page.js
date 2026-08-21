@@ -6,74 +6,65 @@ import ThemeBackground from "@/app/components/themes/ThemeBackground";
 import ThemeAtmosphere from "@/app/components/themes/ThemeAtmosphere";
 
 import Button from "@/app/components/ui/Button";
+import SubmitButton from "@/app/components/ui/Button/SubmitButton";
 import Card from "@/app/components/ui/Card";
 import Input from "@/app/components/ui/Input";
 
 const EditBookPage = async ({ params }) => {
-    await requireSearchAccess();
+  await requireSearchAccess();
 
-    const { id } = await params;
+  const { id } = await params;
 
-    const book = await prisma.books.findUnique({
-        where: {
-            id: Number.parseInt(id),
-        },
-    });
+  const book = await prisma.books.findUnique({
+    where: {
+      id: Number.parseInt(id),
+    },
+  });
 
-    if (!book) {
-        return (
-            <ThemeBackground>
-                <ThemeAtmosphere />
-
-                <main className="relative z-10 p-8">
-                    <h1
-                        style={{
-                            fontFamily:
-                                "var(--font-heading)",
-
-                            fontSize:
-                                "var(--font-size-3xl)",
-
-                            fontWeight:
-                                "var(--font-weight-bold)",
-
-                            lineHeight:
-                                "var(--line-height-heading)",
-
-                            color:
-                              "var(--text-on-background)",
-                        }}
-                    >
-                        Book not found
-                    </h1>
-                </main>
-            </ThemeBackground>
-        );
-    }
-
-    const labelStyle = {
-        fontFamily:
-            "var(--font-body)",
-
-        fontSize:
-            "var(--font-size-sm)",
-
-        fontWeight:
-            "var(--font-weight-semibold)",
-
-        lineHeight:
-            "var(--line-height-body)",
-
-        color:
-            "var(--text-primary)",
-    };
-
+  if (!book) {
     return (
-        <ThemeBackground>
-            <ThemeAtmosphere />
+      <ThemeBackground>
+        <ThemeAtmosphere />
 
-            <main
-                className="
+        <main className="relative z-10 p-8">
+          <h1
+            style={{
+              fontFamily: "var(--font-heading)",
+
+              fontSize: "var(--font-size-3xl)",
+
+              fontWeight: "var(--font-weight-bold)",
+
+              lineHeight: "var(--line-height-heading)",
+
+              color: "var(--text-on-background)",
+            }}
+          >
+            Book not found
+          </h1>
+        </main>
+      </ThemeBackground>
+    );
+  }
+
+  const labelStyle = {
+    fontFamily: "var(--font-body)",
+
+    fontSize: "var(--font-size-sm)",
+
+    fontWeight: "var(--font-weight-semibold)",
+
+    lineHeight: "var(--line-height-body)",
+
+    color: "var(--text-primary)",
+  };
+
+  return (
+    <ThemeBackground>
+      <ThemeAtmosphere />
+
+      <main
+        className="
                     relative
                     z-10
                     mx-auto
@@ -87,184 +78,151 @@ const EditBookPage = async ({ params }) => {
                     sm:px-8
                     lg:py-12
                 "
-            >
-                <header
-                    className="
+      >
+        <header
+          className="
                         flex
                         flex-col
                         gap-2
                     "
-                >
-                    <h1
-                        style={{
-                            fontFamily:
-                                "var(--font-heading)",
+        >
+          <h1
+            style={{
+              fontFamily: "var(--font-heading)",
 
-                            fontSize:
-                                "var(--font-size-3xl)",
+              fontSize: "var(--font-size-3xl)",
 
-                            fontWeight:
-                                "var(--font-weight-bold)",
+              fontWeight: "var(--font-weight-bold)",
 
-                            lineHeight:
-                                "var(--line-height-heading)",
+              lineHeight: "var(--line-height-heading)",
 
-                            letterSpacing:
-                                "var(--letter-spacing-heading)",
+              letterSpacing: "var(--letter-spacing-heading)",
 
-                            color:
-                                "var(--text-on-background)",
-                        }}
-                    >
-                        Edit Book
-                    </h1>
+              color: "var(--text-on-background)",
+            }}
+          >
+            Edit Book
+          </h1>
 
-                    <p
-                        style={{
-                            fontFamily:
-                                "var(--font-body)",
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
 
-                            fontSize:
-                                "var(--font-size-base)",
+              fontSize: "var(--font-size-base)",
 
-                            fontWeight:
-                                "var(--font-weight-normal)",
+              fontWeight: "var(--font-weight-normal)",
 
-                            lineHeight:
-                                "var(--line-height-body)",
+              lineHeight: "var(--line-height-body)",
 
-                            color:
-                               "var(--text-on-background)",
-                        }}
-                    >
-                        Update your book information
-                        and cover.
-                    </p>
-                </header>
+              color: "var(--text-on-background)",
+            }}
+          >
+            Update your book information and cover.
+          </p>
+        </header>
 
-                <Card className="p-6 sm:p-8">
-                    <form
-                        action={UpdateBook}
-                        className="
+        <Card className="p-6 sm:p-8">
+          <form
+            action={UpdateBook}
+            className="
                             flex
                             flex-col
                             gap-6
                         "
-                    >
-                        <div
-                            className="
+          >
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label style={labelStyle}>
-                                Title
-                            </label>
+            >
+              <label style={labelStyle}>Title</label>
 
-                            <Input
-                                name="title"
-                                defaultValue={book.title}
-                                placeholder="Book title"
-                            />
-                        </div>
+              <Input
+                name="title"
+                defaultValue={book.title}
+                placeholder="Book title"
+              />
+            </div>
 
-                        <div
-                            className="
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label style={labelStyle}>
-                                Author
-                            </label>
+            >
+              <label style={labelStyle}>Author</label>
 
-                            <Input
-                                name="author"
-                                defaultValue={book.author}
-                                placeholder="Author name"
-                            />
-                        </div>
+              <Input
+                name="author"
+                defaultValue={book.author}
+                placeholder="Author name"
+              />
+            </div>
 
-                        <div
-                            className="
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label style={labelStyle}>
-                                Genres
-                            </label>
+            >
+              <label style={labelStyle}>Genres</label>
 
-                            <Input
-                                name="genres"
-                                defaultValue={book.genres}
-                                placeholder="Fantasy, Mystery, Fiction"
-                            />
-                        </div>
+              <Input
+                name="genres"
+                defaultValue={book.genres}
+                placeholder="Fantasy, Mystery, Fiction"
+              />
+            </div>
 
-                        {book.cover_img && (
-                            <div
-                                className="
+            {book.cover_img && (
+              <div
+                className="
                                     flex
                                     flex-col
                                     gap-4
                                 "
-                            >
-                                <label
-                                    style={labelStyle}
-                                >
-                                    Current cover
-                                </label>
+              >
+                <label style={labelStyle}>Current cover</label>
 
-                                <img
-                                    src={book.cover_img}
-                                    alt={`${book.title} cover`}
-                                    className="
+                <img
+                  src={book.cover_img}
+                  alt={`${book.title} cover`}
+                  className="
                                         h-72
                                         w-52
                                         rounded-lg
                                         object-cover
                                     "
-                                />
-                            </div>
-                        )}
+                />
+              </div>
+            )}
 
-                        <div
-                            className="
+            <div
+              className="
                                 flex
                                 flex-col
                                 gap-2
                             "
-                        >
-                            <label style={labelStyle}>
-                                Replace cover
-                                (optional)
-                            </label>
+            >
+              <label style={labelStyle}>Replace cover (optional)</label>
 
-                            <Input
-                                type="file"
-                                name="book_cover"
-                                accept="image/*"
-                            />
-                        </div>
+              <Input type="file" name="book_cover" accept="image/*" />
+            </div>
 
-                        <input
-                            type="hidden"
-                            name="book_id"
-                            value={book.id}
-                        />
+            <input type="hidden" name="book_id" value={book.id} />
 
-                        <Button type="submit">
-                            Save Changes
-                        </Button>
-                    </form>
-                </Card>
-            </main>
-        </ThemeBackground>
-    );
+            <SubmitButton loadingText="Saving Changes...">
+              Save Changes
+            </SubmitButton>
+          </form>
+        </Card>
+      </main>
+    </ThemeBackground>
+  );
 };
 
 export default EditBookPage;
